@@ -1,6 +1,6 @@
 # ERP_book
 
-db name : book
+db name : bookERP
 
 table : pdstock
 
