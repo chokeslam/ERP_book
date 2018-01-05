@@ -1,9 +1,10 @@
 # ERP_book
 
 db name : book
+
 table : pdstock
 
-<table name="pdstock" width="700" style="border:2px blue solid;" border="1">
+<table name="pdstock"  style="border:2px blue solid;" border="1">
     <tr>
         <td align="center">#</td>
         <td align="center">名稱</td>
