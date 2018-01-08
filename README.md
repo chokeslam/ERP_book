@@ -60,3 +60,19 @@ table : pdstock
         <td align="center"></td>
     </tr>
 </table>
+
+書籍條碼 共9碼
+<table>
+	<tr>
+		<td>12</td>
+		<td>345</td>
+		<td>678</td>
+		<td>9</td>
+	</tr>
+	<tr>
+		<td>年分</td>
+		<td>課號</td>
+		<td>老師編號</td>
+		<td>該課程第幾本</td>
+	</tr>
+</table>
