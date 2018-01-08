@@ -64,12 +64,14 @@ table : pdstock
 書籍條碼 共9碼
 <table>
 	<tr>
+		<td>條碼</td>
 		<td>12</td>
 		<td>345</td>
 		<td>678</td>
 		<td>9</td>
 	</tr>
 	<tr>
+		<td>意義</td>
 		<td>年分</td>
 		<td>課號</td>
 		<td>老師編號</td>
