@@ -4,7 +4,7 @@ db name : bookERP
 
 table : pdstock
 
-<table name="pdstock"  style="border:2px blue solid;" border="1">
+<table name="pdstock">
     <tr>
         <td align="center">#</td>
         <td align="center">名稱</td>
