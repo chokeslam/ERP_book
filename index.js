@@ -2,54 +2,48 @@
     
     // focus學生編號條碼
     $("#code").focus();
-    $("#search").on('click',A1);
+    //按鈕search按下後執行student_request向後端請求學生資料
+    $("#search").on('click',student_request);
 	
-	//學生編號條碼輸入按ENTER 執行A1
+	//學生編號條碼輸入按ENTER 執行student_request向後端請求學生資料
 	$("#code").keypress(function(){
   		if (event.which === 13){
-			A1();
+			student_request();
     	}   
   	});
-  	//書籍條碼ENTER後換行
-  	$("#test1").keypress(function(){
+  	//書籍條碼ENTER後將成功嶺取的書 顯示在下方
+  	$("#book").keypress(function(){
   		if (event.which === 13){
-			$("#test2").focus();
-			
-			$("#test2").keypress(function(){
-  				if (event.which === 13){
-					$("#test3").focus();
-					
-					$("#test3").keypress(function(){
-  						if (event.which === 13){
-							$("#test4").focus();
-							
-							$("#test4").keypress(function(){
-  								if (event.which === 13){
-									$("#test5").focus();
-    							}   
-  							});
-    					}   
-  					});
-    			}   
-  			});
-    	}   
+  					
+  			$("#showbook").append(
+  				'<br />'+$("#book").val()
+  			);		
+    	}
+    //將 book內容清空	
+    	$("#book").val("");	   
   	});
+		
+
   	
-  	
-  	
-  	
-  	//將sever.php 處理好的資料 回傳
-	function A1 () {
+  	//向sever.php 發出請求並將處理好的學生資料 回傳
+	function student_request () {
 	  $.ajax({
             type: "GET",
-            url: "sever.php?code=" + $("#code").val(),
+            url: "sever.php",
+            data:{
+            	code:$("#code").val()
+            },
             dataType: "json",
+           //請求成功將內容列出
             success: function(data) {
                 
                 if (data.code) {
+                	
+                	//將 code內容清空	
+                	$("#code").val("");
                 	//focus 到書籍條碼的input
-                	$("#test1").focus();
-                	//列出資料
+                	$("#test1").focus();                	
+                	//列出學生資料
                 	$("img").attr("src",data.img);
                     
                     $("#searchname").html(
@@ -67,17 +61,23 @@
                   	 $("#searchcourse").html(
                         "報名科目<br /><br />"
                     );
+                    //列出補習科目
 					$.each(course,function(index,value){
 						
 						$('#searchcourse').append(value+'<br />');
 						
 					});
-                 
+                //請求成功但沒尋找到資料
                 } else {
+                	//focus 回 code 欄位
                 	$("#code").focus();
+                	//將 code 清空
+                	$("#code").val("");
+                	//在 searchname 顯示錯誤訊息
                     $("#searchname").html(data.msg);
                 }
             },
+            //發生錯誤
             error: function(jqXHR) {
                 alert("發生錯誤: " + jqXHR.status);
             }
