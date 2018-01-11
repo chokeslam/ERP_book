@@ -42,7 +42,7 @@
                 	//將 code內容清空	
                 	$("#code").val("");
                 	//focus 到書籍條碼的input
-                	$("#test1").focus();                	
+                	$("#book").focus();                	
                 	//列出學生資料
                 	$("img").attr("src",data.img);
                     
