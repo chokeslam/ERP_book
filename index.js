@@ -57,6 +57,7 @@
                     $("#searchclassname").html(
                         "科系類別:" +data.class_name
                     );
+                    
                     var course = data.course.split(";");
                   	 $("#searchcourse").html(
                         "報名科目<br /><br />"
@@ -67,6 +68,16 @@
 						$('#searchcourse').append(value+'<br />');
 						
 					});
+					var take = data.take.split(";");
+					$("#searchtake").html(
+                        "已領書籍<br /><br />"
+                    );
+                    $.each(take,function(index,value){
+						
+						$("#searchtake").append(value+'<br />');
+						
+					});
+					
                 //請求成功但沒尋找到資料
                 } else {
                 	//focus 回 code 欄位
