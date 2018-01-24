@@ -61,7 +61,7 @@ table : pdstock
     </tr>
 </table>
 
-table : pdstock
+table : iostock
 
 <table name="iostock">
     <tr>
