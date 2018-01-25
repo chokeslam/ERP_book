@@ -142,13 +142,15 @@ table : iostock
 <table>
 	<tr>
 		<td>條碼</td>
-		<td>12</td>
-		<td>345</td>
-		<td>678</td>
-		<td>9</td>
+		<td>1</td>
+		<td>23</td>
+		<td>456</td>
+		<td>789</td>
+		<td>10</td>
 	</tr>
 	<tr>
 		<td>意義</td>
+		<td>類別</td>
 		<td>年分</td>
 		<td>課號</td>
 		<td>老師編號</td>
