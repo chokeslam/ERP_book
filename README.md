@@ -117,7 +117,12 @@ table : iostock
         <td align="center">0</td>
         <td align="center">異動日期</td>
         <td align="center"></td>
+<<<<<<< HEAD
+    </tr>
+    
+=======
     </tr>   
+>>>>>>> 091cdbedaae21be4a5577126d0a4d7ca2515830c
     <tr>
         <td align="center">5</td>
         <td align="center">UP_Time</td>
@@ -129,6 +134,10 @@ table : iostock
     </tr>
 </table>
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 091cdbedaae21be4a5577126d0a4d7ca2515830c
 書籍條碼 共9碼
 <table>
 	<tr>

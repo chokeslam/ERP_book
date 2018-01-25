@@ -11,24 +11,12 @@
 			student_request();
     	}   
   	});
-  	//書籍條碼ENTER後將成功嶺取的書 顯示在下方
-  	$("#book").keypress(function(){
-  		if (event.which === 13){
-  					
-  			$("#showbook").append(
-  				'<br />'+$("#book").val()
-  			);		
-    	}
-    //將 book內容清空	
-    	$("#book").val("");	   
-  	});
-		
-
   	
+		
   	//向sever.php 發出請求並將處理好的學生資料 回傳
 	function student_request () {
 	  $.ajax({
-            type: "GET",
+            type: "POST",
             url: "sever.php",
             data:{
             	code:$("#code").val()
@@ -68,7 +56,7 @@
 						$('#searchcourse').append(value+'<br />');
 						
 					});
-					var take = data.take.split(";");
+					var take = data.taketime.split(";");
 					$("#searchtake").html(
                         "已領書籍<br /><br />"
                     );
