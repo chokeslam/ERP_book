@@ -56,7 +56,7 @@
 						$('#searchcourse').append(value+'<br />');
 						
 					});
-					var take = data.take.split(";");
+					var take = data.taketime.split(";");
 					$("#searchtake").html(
                         "已領書籍<br /><br />"
                     );

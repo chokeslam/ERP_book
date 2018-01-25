@@ -7,6 +7,7 @@
 	$ST_Code =  $student['code'];	
 	//echo $PD_No;
 	//print_r($student);
+	
 	//搜尋庫存TABLE
 	$my_db= mysqli_connect("localhost" , "root" , "");
 	
@@ -33,6 +34,8 @@
 	$result= mysqli_query($my_db, $sql);
 	
 	$note = mysqli_fetch_assoc($result);
+	
+	
 	//搜尋結束
 	//print_r($note);
 	$takebook = $note['note']."_". $note['course'];    //領取時 寫入已領取表格用的 書籍格式
@@ -43,7 +46,8 @@
 	$course = explode(";", $student['course']);  //學生報名的科目 將   ' ; ' 拿掉後  放入陣列  $course中
 	//分割 $student['take'] 欄位字串
 	$take = explode(";", $student['take']);		////學生已領過的書籍  將   ' ; ' 拿掉後  放入陣列  $take中
-	
+
+
 	//分割並重組 比對課程老師字串   以  微積分秋@程中@講義@01 為例
 	
 	$string1 =  strchr($note['note'], "@" ,1);       //  切割後 為  " 微積分秋  "
@@ -53,10 +57,27 @@
 	$string3 = strchr($string2, "@" ,1);    //   切割後 為   " 程中  "
 
 	$newstring = $string1 . "@" .$string3;  //  重組後為  " 微積分秋@程中   "
-	
+
 	//print_r($take);
-	
+
+	// 判斷有無輸入書籍編號
+	if (!isset($_REQUEST["book"]) || empty($_REQUEST["book"])) {
+		
+        echo json_encode(array('msg' => '沒有輸入書籍編號！'));
+
+        return;
+    }
+    
+    if (!isset($note) || empty($note)) {
+		
+        echo json_encode(array('msg' => '書籍編號錯誤！'));
+
+        return;
+    }
+    
 	//判斷  是否是該學生報名的科目   $note['course'] 是否在 $course陣列裡
+	
+	
 	if (!in_array($note['course'], $course)){
 	
 		echo json_encode(array('msg' => '未報名的科目！'));
@@ -73,9 +94,11 @@
 		
 		
 		if (in_array($note['note'], $take)){
+				
+			$time = strchr(strchr($student['taketime'], $note['note']),";" , 1);
+			$time = substr(strchr($time," "),1);
 			
-			
-				echo json_encode(array('msg' => '這本書已領過！'));
+			echo json_encode(array('msg' =>$note['note'] . '<br />'.'這本書已在 ' . $time . " 領過"));
 			
 				return 0;	
 				
@@ -87,9 +110,9 @@
 			
 					take_book ($takebook,$ST_Code);		//執行寫入已領取書籍functuon
 				
-		$rw = ABCCC($ST_Code);				
+		$rw = reload($ST_Code);				
 		
-		$rw = $rw['take'];
+		$rw = $rw['taketime'];
 		
 		echo json_encode(array('msg' => '可以領！' , 'book' => "$rw" ));
 				
@@ -111,9 +134,9 @@
 		
 		take_book ($takebook,$ST_Code);		//執行寫入已領取書籍functuon
 		
-		$rw = ABCCC($ST_Code);				
+		$rw = reload($ST_Code);				
 		
-		$rw = $rw['take'];
+		$rw = $rw['taketime'];
 		
 		echo json_encode(array('msg' => '沒領過 可以領！' , 'book' => "$rw" ));
 				
@@ -129,9 +152,9 @@
 		
 		take_book ($takebook,$ST_Code);		//執行寫入已領取書籍functuon
 		
-		$rw = ABCCC($ST_Code);				
+		$rw = reload($ST_Code);				
 		
-		$rw = $rw['take'];
+		$rw = $rw['taketime'];
 		
 		echo json_encode(array('msg' => '同樣老師的課 可以領！' , 'book' => "$rw" ));
 	
@@ -143,7 +166,10 @@
 		//如有比對到 則不可借
 		if (in_array($note['note'], $take)){
 			
-			echo json_encode(array('msg' => '這本書已領過！'));
+			$time = strchr(strchr($student['taketime'], $note['note']),";" , 1);
+			$time = substr(strchr($time," "),1);
+			
+			echo json_encode(array('msg' =>$note['note'] . '<br />'.'這本書已在 ' . $time . " 領過"));
 				
 		
 		//判斷條件 #2 為  $string1(分割後的字串  ' 微積分秋 ') 有出現在  $student['take']( 拿過的書的字串內 ) 且
@@ -151,7 +177,24 @@
 			
 		}else if (strchr($student['take'], $string1) == TRUE && strchr($student['take'],$newstring) == FALSE) {
 			
-			echo json_encode(array('msg' => '已領過另一位老師的書！'));
+			$abb=null;
+			
+			foreach ($take as $key => $value) {
+				if (strchr($value, $string1) == TRUE){
+					$abb=$abb. $value;
+				}
+			}
+	
+			$string1 =  strchr($abb, "@" ,1);       //  切割後 為  " 微積分秋  "
+	
+			$string2 = substr(strchr($abb, "@") , 1);   // 切割後 為   " 程中@講義@01  "
+	
+			$string3 = strchr($string2, "@" ,1);    //   切割後 為   " 程中  "
+
+			$abb = $string1 . "@" .$string3;  //  重組後為  " 微積分秋@程中   " 
+				
+			
+			echo json_encode(array('msg' =>'已領過    "'.$string3.'"    老師的書！'));
 			
 		}
 			
@@ -276,7 +319,7 @@
 		
 	}
 
-	function ABCCC($data){
+	function reload($data){
 		
 	$my_db= mysqli_connect("localhost" , "root" , "");
 	
@@ -289,13 +332,20 @@
 	$result= mysqli_query($my_db, $sql);
 	//將搜尋後學生資料放入  $rs
 	$rs = mysqli_fetch_assoc($result);
-	//判斷有沒有搜尋到資料
+	
 	
 	
 	$takebook=$rs['take']; 
 	$takebook=explode(";", $takebook);
 	array_pop($takebook);
+	$take_time = $takebook;
 	$num=count($takebook);
+	
+	for ($i=0; $i < $num ; $i++) { 
+		$take_time[$i] = strchr($take_time[$i],"_",1) .strrchr($take_time[$i],"_");
+	}
+	$take_time = implode(";", $take_time);
+	$take_time =str_replace("_", " ", $take_time);	
 				
 		
 	for ($i=0; $i < $num ; $i++) { 
@@ -303,7 +353,7 @@
 	}
 		$takebook = implode(";", $takebook);
 		$rs['take'] = $takebook;
-		
+		$rs['taketime'] = $take_time;
 		$_SESSION['student'] = $rs;	
 		
 		return $rs;
