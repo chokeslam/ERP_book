@@ -14,74 +14,368 @@
 		
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" 
 		integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+		
 	</head>
 
-	<body>
+	<body style="font-family:Microsoft JhengHei;background-color:#E0E0E0;">
 		<div class="row">
-			<div class="col-12 border border-dark" style="height: 80px; text-align: center; line-height: 80px;">我是NAV</div>
-			<div class="col-12 border border-primary" style="height: 100px; text-align: center; margin: 20px 0px 20px 0px;">
+			
+			<div class="col-12">
+				
+				<nav class="navbar navbar-expand navbar-dark bg-primary" >
+					
+ 					<a class="navbar-brand" href="index.html" >書籍系統</a>
+ 					
+  					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    					
+    					<span class="navbar-toggler-icon"></span>
+  					
+  					</button>
+  					
+  					<div class="collapse navbar-collapse" id="navbarNavDropdown">
+    					
+    					<ul class="navbar-nav">
+     						
+     						<li class="nav-item">
+        					
+        						<a class="nav-link" href="index.html">領書</a>
+      					
+      						</li>
+      					
+      						<li class="nav-item">
+        				
+        						<a class="nav-link" href="Returns.html">退書</a>
+      					
+      						</li>
+      					
+      						<li class="nav-item dropdown">
+        				
+        						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          				
+          							預領
+        				
+        						</a>
+        				
+        						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"  style="text-align: center;">
+          					
+          							<a class="dropdown-item" href="advance.html">預先領書</a>
+
+          							<a class="dropdown-item" href="#" id="getmodal">預領轉領書</a>
+        				
+        						</div>
+      					
+      						</li>
+      					
+      						<li class="nav-item dropdown">
+        				
+        						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          				
+          							檢視
+        				
+        						</a>
+        				
+        						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="text-align: center;">
+          				
+          							<a class="dropdown-item" href="#">書籍庫存</a>
+          				
+          							<a class="dropdown-item" href="#">還書紀錄</a>
+          							
+          							<a class="dropdown-item" href="advance_list.html">預領紀錄</a>
+          				
+          							<a class="dropdown-item" href="#">領書紀錄</a>
+        				
+        						</div>
+      				
+      						</li>
+    				
+    					</ul>
+  				
+  					</div>
+			
+				</nav>
+			
+			</div>
+			
+			<div class="col-12" style="height: 50px; text-align: center;">
+			
+				<p class="h1">領書</p>
+			
+			</div>
+			
+			<div class="col-12" style="height: 100px; text-align: center;"id="box1">
+				
 				<div style="margin-top: 30px;">
-
-					
+	
 					<input type="text" id="code">
+					
 					<input type="submit" id="search" value="確認"/>
-					<!--<button id="search">查詢</button>-->
-				</div>
-			</div>
-			<div class="col-3 border border-success" style="height: 450px; text-align: center;">
-								
-				<div>
-					<img src="" style="height: 200px;" id="img"/><!-- 學生照片 -->
-			
 					
-					<p id="searchname"></p>			<!-- 學生姓名 -->
-					
-					<p id="searchclassify"></p> 	<!-- 補習類別 -->
-					
-					<p id="searchclassname"></p>	<!-- 科系類別 -->	
-					
-					<br /><br />			
-					
-					<div id="searchcourse"></div>  		<!-- 報名課程 -->
-					 	
-				</div>
+					<p id="error" style="color:red;"></p>	
 
-				
+			</div>
 				
 			</div>
 			
-			<div class="col-5 border border-danger" style="height: 500px; text-align: center;">
+			<div class="col-3" style=" text-align: center;" >
+			
+				<div class="card" id="box2">
+  			
+  					<div class="card-header bg-primary" style="color: #FFFFFF">
+    			
+    					學生資料
+  				
+  					</div>
+  				
+  					<div class="card-body" id="card1">
+    			
+    					<img src="" style="height: 200px;" id="img"/><!-- 學生照片 -->
+
+						<p id="searchname"></p>			<!-- 學生姓名 -->
+					
+						<p id="searchclassify"></p> 	<!-- 補習類別 -->
+					
+						<p id="searchclassname"></p>	<!-- 科系類別 -->	
+					
+						<br /><br />			
+					
+						<div id="searchcourse"></div>  		<!-- 報名課程 -->
+  					
+  					</div>
 				
-				<div>
-					
-					<div id="searchtake"></div>  <!-- 已領取書籍 -->
-					
+				</div>				
+	
+			</div>
+			
+			<div class="col-5" style=" text-align: center;">
+			
+				<div class="card"  id="box3">
+  			
+  					<div class="card-header bg-primary" style="color: #FFFFFF">
+   			
+   						 已領取書籍
+  			
+  					</div>
+  				
+  					<div class="card-body">
+				
+						<div id="searchtake"></div>  <!-- 已領取書籍 -->
+  				
+  					</div>
+				
+				</div>				
+	
+			</div>
+			
+			<div class="col-4" style=" text-align: center;">
+				
+				<div class="card" id="box4">
+  				
+  					<div class="card-header bg-primary" style="color: #FFFFFF">
+   				
+   						 領書條碼掃描
+  				
+  					</div>
+  				
+  					<div class="card-body">
+    					
+    					<input type="text" id="book"/>
+    			
+    					<br /><br />
+    			
+    					<div id="showbook" style="color:red;"></div>
+  				
+  					</div>
+			
 				</div>
-				
+			
+			</div>
+
+			<!-- Modal -->
+			
+			<div class="modal fade" id="formmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  				
+  				<div class="modal-dialog modal-dialog-centered" role="document">
+    				
+    				<div class="modal-content">
+      		
+      					<div class="modal-header">
+        	
+        					<h5 class="modal-title text-primary font-weight-bold">請輸入借書單號</h5>
+        	
+        					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          	
+          						<span aria-hidden="true">&times;</span>
+        	
+        					</button>
+      		
+      					</div>
+      		
+      					<div class="modal-body row">
+      		
+      						<label for="inputnno" class="col-sm-3 col-form-label">借書單號 :</label>
+    		
+    						<div class="col-sm-9">
+      		
+      							<input type="text" class="form-control" id="inputnno">
+    		
+    						</div>
+      						<div class="col-sm-3"></div>
+      						<div class="col-sm-9" id="msg1" style="color: red;"></div>
+      					</div>
+      		
+      					<div class="modal-footer">
+        	
+        					<button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+        	
+        					<button type="button" class="btn btn-primary" id="find">搜尋</button>
+      		
+      					</div>
+    		
+    				</div>
+  			
+  				</div>
+			
 			</div>
 			
-			<div class="col-4 border border-info" style="height: 550px; text-align: center;">
-				<div class="col-12  border border-primary">領書條碼掃描</div>
-				<br />
-								
-					<div>
-						
-						<input type="text" id="book"/>
-					</div>
-					<br />															
-					<div id="showbook" style="color:red;"></div>
-				
-				
-				
+			
+			
+			
+			<div class="modal fade" id="takemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  				
+  				<div class="modal-dialog modal-lg" role="document">
+    				
+    				<div class="modal-content">
+      		
+      					<div class="modal-header">
+        	
+        					<h5 class="modal-title text-primary font-weight-bold">預領轉領書</h5>
+        	
+        					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          	
+          						<span aria-hidden="true">&times;</span>
+        	
+        					</button>
+      		
+      					</div>
+      		
+      					<div class="modal-body row">
+      		
+      						<label for="lendnno" class="col-sm-3 col-form-label">借書單號 :</label>
+    		
+    						<div class="col-sm-9">
+      		
+      							<input type="text" class="form-control" id="lendnno" readonly="readonly">
+    		
+    						</div>
+    						
+    						<label for="lendschool" class="col-sm-3 col-form-label">學校名稱 :</label>
+    							
+    						<div class="col-sm-9">
+    							
+      							<input type="text" class="form-control" id="lendschool" readonly="readonly" style="margin-top: 10px;">
+    						
+    						</div>
+    					
+            				<label for="lendstudent" class="col-sm-3 col-form-label">學生姓名 :</label>
+    						
+    						<div class="col-sm-9">
+      							
+      							<input type="text" class="form-control" id="lendstudent" readonly="readonly" style="margin-top: 10px;">
+    						
+    						</div>
+    						
+            				<label for="lendsales" class="col-sm-3 col-form-label">業務名稱 :</label>
+    					
+    						<div class="col-sm-9">
+      						
+      							<input type="text" class="form-control" id="lendsales" readonly="readonly" style="margin-top: 10px;">
+    						
+    						</div>
+            			
+            				<label for="lenddate" class="col-sm-3 col-form-label">借書日期 :</label>
+    						
+    						<div class="col-sm-9">
+      							
+      							<input type="text" class="form-control" id="lenddate" readonly="readonly" style="margin-top: 10px;">
+    						
+    						</div>
+    						
+    						<label for="lenddate" class="col-sm-3 col-form-label">要轉書籍 :</label>
+      						
+      						<div class="col-sm-9" id="checkbox" style="margin-top: 10px; color: red;"></div>
+      								
+            				<label for="lendstudentnno" class="col-sm-3 col-form-label">學生編號 :</label>
+    					
+    						<div class="col-sm-9">
+      						
+      							<input type="text" class="form-control" id="lendstudentnno" style="margin-top: 10px;">
+    						
+    						</div>
+    						
+    						<div class="col-sm-3"></div>
+    						    						      						
+      						<div class="col-sm-9"  id="msg" style="color: red;"></div>
+      					</div>
+      		
+      					<div class="modal-footer">
+        	
+        					<button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+        	
+        					<button type="button" class="btn btn-primary" id="ok">搜尋</button>
+      		
+      					</div>
+    		
+    				</div>
+  			
+  				</div>
+			
 			</div>
-			
 
-			
-		</div>
 
-		<script src="jquery-3.2.1.min.js"></script>
-		<script type="text/JavaScript" src="index.js"></script>
-		<script type="text/JavaScript" src="getbook.js"></script>
+<!--                    --------                  -->
+			<div class="modal fade" id="prompt" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  				
+  				<div class="modal-dialog modal-dialog-centered" role="document">
+    				
+    				<div class="modal-content">
+      		
+      					<div class="modal-header bg-primary">
+        	
+        					<h5 class="modal-title text-white font-weight-bold">提示</h5>
+        	
+        					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          	
+          						<span aria-hidden="true">&times;</span>
+        	
+        					</button>
+      		
+      					</div>
+      		
+      					<div class="modal-body row">
+      		
+							<div id="jjj" style="margin: 0 auto; color: red;"></div>
+      		
+      					</div>
+      		
+      					<div class="modal-footer">
+        	
+							<div id="sss" style="margin: 0 auto;"></div>
+      		
+      					</div>
+    		
+    				</div>
+  			
+  				</div>
+			
+			</div>	
+	<script>
+		$(document).ready(function() {
+	
+		});
+	</script>
+	<script src="jquery-3.2.1.min.js"></script>
+	<script type="text/JavaScript" src="index.js"></script>
+	<script type="text/JavaScript" src="getbook.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>	

@@ -5,7 +5,7 @@
     $student = $_SESSION['student'];
 	$PD_No=$_REQUEST["book"];
 	$ST_Code =  $student['code'];	
-	//echo $PD_No;
+	
 	//print_r($student);
 	
 	//搜尋庫存TABLE
@@ -35,13 +35,90 @@
 	
 	$note = mysqli_fetch_assoc($result);
 	
+	$coursename = $note['course'];
 	
+	$sql = "SELECT nno FROM teacher where course = '$coursename' ";
+	
+	$result= mysqli_query($my_db, $sql);
+	
+	$coursenno = mysqli_fetch_assoc($result);
+	
+	$coursenno = $coursenno['nno'];
+	
+	$studentnno = $student['nno'];
+	
+	$sql = "SELECT * FROM member_1_permission where studb_nno = '$studentnno' AND course_nno = '$coursenno'";
+	
+	$result= mysqli_query($my_db, $sql);
+	
+	$courseloa = mysqli_fetch_assoc($result);
+	
+	//print_r($courseloa);
+	
+	$date = date("Y-m-d",mktime(0,0,0,date("m"),date("d"),date("Y")));
+	
+	$date = decrease10years($date);
+
+	//print_r($courseloa['halt_date_period']);
+
+	if(empty($courseloa['halt_date_period']) == FALSE){
+		
+		$haltdate=explode("~",$courseloa['halt_date_period']);
+		
+	}
+
+
+
+	
+	if ($courseloa['fee_note'] == "Y" && !empty($haltdate[0]) && 
+		
+		empty($haltdate[1])  && strtotime($date) >= strtotime($haltdate[0])){
+					
+		$haltdate[0] = 	increase10years($haltdate[0]);	
+			
+		$msg =  "此科目". " ' ".$coursename." ' "."已從".$haltdate[0]."開始停權";
+		
+		echo json_encode(array('msg' => "$msg"));
+		
+		return ;
+		
+	}
+			
+	if ($courseloa['fee_note'] == "Y" && empty($haltdate[0]) && 
+		
+		!empty($haltdate[1])  && strtotime($date) <= strtotime($haltdate[1])){
+		
+		$haltdate[1] = 	increase10years($haltdate[1]);
+		
+		$msg = "此科目". " ' ".$coursename." ' "."停權至".$haltdate[1];
+		
+		echo json_encode(array('msg' => "$msg"));
+		
+		return ;
+		
+	}
+			
+	if ($courseloa['fee_note'] == "Y" && !empty($haltdate[0]) && 
+		
+		!empty($haltdate[1])  && strtotime($date) <= strtotime($haltdate[1])){
+			
+		$haltdate[0] = 	increase10years($haltdate[0]);
+		
+		$haltdate[1] = 	increase10years($haltdate[1]);		
+		
+		$msg = "此科目"." ' ".$coursename." ' "."已從".$haltdate[0]."開始停權至".$haltdate[1];
+		
+		echo json_encode(array('msg' => "$msg"));
+		
+		return ;
+		
+	}				
 	//搜尋結束
 	//print_r($note);
 	$takebook = $note['note']."_". $note['course'];    //領取時 寫入已領取表格用的 書籍格式
 	//echo $takebook;
 	
-	//判斷是否有報名這個科目
+	
 	//分割 $student['course'] 欄位字串
 	$course = explode(";", $student['course']);  //學生報名的科目 將   ' ; ' 拿掉後  放入陣列  $course中
 	//分割 $student['take'] 欄位字串
@@ -58,6 +135,7 @@
 
 	$newstring = $string1 . "@" .$string3;  //  重組後為  " 微積分秋@程中   "
 
+	
 	//print_r($take);
 
 	// 判斷有無輸入書籍編號
@@ -106,7 +184,7 @@
 				
 					Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
 		
-					Transaction($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
+					Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
 			
 					take_book ($takebook,$ST_Code);		//執行寫入已領取書籍functuon
 				
@@ -130,7 +208,7 @@
 		
 		Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
 		
-		Transaction($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
+		Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
 		
 		take_book ($takebook,$ST_Code);		//執行寫入已領取書籍functuon
 		
@@ -148,7 +226,7 @@
 		
 		Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
 		
-		Transaction($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
+		Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
 		
 		take_book ($takebook,$ST_Code);		//執行寫入已領取書籍functuon
 		
@@ -167,6 +245,7 @@
 		if (in_array($note['note'], $take)){
 			
 			$time = strchr(strchr($student['taketime'], $note['note']),";" , 1);
+			
 			$time = substr(strchr($time," "),1);
 			
 			echo json_encode(array('msg' =>$note['note'] . '<br />'.'這本書已在 ' . $time . " 領過"));
@@ -264,7 +343,7 @@
 //--------------------------------------------------------------------------------------------------------------------------	 
 	 
 	//寫入異動表 function
-	function Transaction ($data1 , $data2){						//$data1 = $ST_Code (學生編號)  $data2 = $PD_No  (書籍編號)
+	function Transaction_out ($data1 , $data2){						//$data1 = $ST_Code (學生編號)  $data2 = $PD_No  (書籍編號)
 		
 		$formnumber = Form_number();
 		
@@ -279,7 +358,7 @@
 		mysqli_query($my_db,"SET NAMES 'utf8'");
 		
 		$sql = " INSERT INTO iostock VALUES 
-				 (null , '$formnumber' , '$data2' , '$data1' , null , '$QT_Qty' , '$date' , CURRENT_TIMESTAMP)";
+				 (null , '$formnumber' , '$data2' , 'null' , '$data1' , null , '$QT_Qty' , '$date' , CURRENT_TIMESTAMP)";
 		
 		$result= mysqli_query($my_db, $sql);
 		//echo $formnumber;
@@ -319,6 +398,9 @@
 		
 	}
 
+//--------------------------------------------------------------------------------------------------------------------------
+	
+	//重新載入function 
 	function reload($data){
 		
 	$my_db= mysqli_connect("localhost" , "root" , "");
@@ -357,6 +439,29 @@
 		$_SESSION['student'] = $rs;	
 		
 		return $rs;
+	}
+	
+//----------------------------------------------------------------------------------------------------------------------
+
+	//更正資料庫抓出來的時間
+	function decrease10years($data){
+		
+	$date=date_create($data);
+	
+	date_sub($date,date_interval_create_from_date_string("10 years"));
+	
+	return date_format($date,"Y-m-d");
+	
+	}
+	
+	function increase10years($data){
+		
+	$date=date_create($data);
+	
+	date_add($date,date_interval_create_from_date_string("10 years"));
+	
+	return date_format($date,"Y-m-d");
+	
 	}
 	/*	$student['take'] = $student['take'].";".$note['note'];
 	$_SESSION['student'] = $student;
