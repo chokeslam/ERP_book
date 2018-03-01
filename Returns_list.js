@@ -4,14 +4,18 @@
 			function format ( d ) {
     			// `d` is the original data object for the row
     			var course = d.book_name.split(";");
+    			
     			var string = "";
+    			
     			$.each(course,function(index,value){
 						
 						string = string+value+"<br>"+"<hr>";
 						
-					});
+				});
+					
     			bookname = string.substring(0,string.length-1);
-    			return '<div class="bg-primary text-white" >已預領的書籍</div>'+'<div class ="book" style="padding:10px 0;">'+bookname+'</div>';
+    			
+    			return '<div class="bg-primary text-white" >已還書籍名稱</div>'+'<div class ="book" style="padding:10px 0;">'+bookname+'</div>';
     			
 			}
 			
@@ -33,7 +37,10 @@
 					
 			//使用 datatable
 			var table =	$('#example').DataTable({
-
+			
+			
+"sScrollXInner": "50%",
+"bScrollCollapse": true,
             //"sPaginationType" : "full_numbers",
             "oLanguage" : {
                 "sLengthMenu": "每頁顯示 _MENU_ 筆紀錄",
@@ -54,12 +61,12 @@
 			  	dom:'Brt<"justify-content-center"p>',
 			  	
 			  	//每頁顯示的資料筆數調整
-			  	"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+			  	"lengthMenu": [[12, 25, 50, -1], [12, 25, 50, "All"]],
 			  		
 			  	select: true,
 			  	
 			  	//用 ajax 到後端  advance_list.php 撈資料
-        		"ajax": "advance_list.php",
+        		"ajax": "Returns_list.php",
         		
         		//資料擺放在列的順序	
         		"columns":[
@@ -68,13 +75,12 @@
             						
             	{ "data": "school_name" },			//school_name : 學校名稱
             						
-            	{ "data": "student_name" },			//student_name : 學生名稱
+            	{ "data": "student_name" },			//student_name : 學生名稱            	
             						
-            	{ "data": "sales_name" },			//sales_name : 業務名稱
-            						
-            	{ "data": "lend_date" },			//lend_date : 借貨日期
-            						
+            	{ "data": "return_date" },			//lend_date : 借貨日期
             	
+            	{ "data": "admin_name" },			//sales_name : 業務名稱
+            						       	
             	// 新增的欄位 1 : 下拉展開	內容為 借出的書名					
             	{
                   "className":'details-control book-content',
@@ -86,21 +92,8 @@
                   "defaultContent": '<button type="button" class="btn btn-link">'+"查看內容"+'</button>'
             	},
             	
-            	//新增欄位 2 : 修改及還書 欄位  點擊展開	bootstrap 互動視窗
-                {                
-                  "className":'click',
-                  
-                  "orderable":false,
-                 	
-                  "data":null,
-                 	
-                 	// bootstrap 互動視窗class
-                  "defaultContent":'<button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModal">'+"修改/還書"+'</button>'
-                },  
         		]
-        	
-        	
-        		
+      		
   			});
 		
 				//下拉展開	
@@ -205,7 +198,7 @@
 				
   			});	
 
-			//條碼輸入後 AJAX 到後端比對資料				
+	/*		//條碼輸入後 AJAX 到後端比對資料				
 			$('#bar').keypress(function(){
 			
   				if (event.which === 13){
@@ -223,11 +216,11 @@
 				
 				book_upload();
 				
-			});
+			});*/
   			
 //-----------------------------------------------------------------------------------------------------------
 	
-			function book_request (){
+/*			function book_request (){
 					
 				$.ajax({
 					type: "POST" ,
@@ -322,5 +315,5 @@
 						alert("發生錯誤: " + jqXHR.status);
        	 			}
 				});
-			};
+			};*/
 		});
