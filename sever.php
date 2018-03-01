@@ -21,12 +21,192 @@
         return;
     }
 	
+
 	
 	$result= mysqli_query ($my_db, $sql);
 	//將搜尋後學生資料放入  $rs
 	$rs = mysqli_fetch_assoc ($result);
+	//print_r($rs);
+	$date = date("Y-m-d",mktime(0,0,0,date("m"),date("d"),date("Y")));
+	$date = decrease10years($date);
+	//判斷該如何處理停權時間資料
+	//$rs['halt_date_period'] = "2006-05-17~2018-08-31_~2007-08-31";
+	//$rs['halt_date_period'] = "2006-05-17~2008-08-31_2007-08-31~2018-08-31";
+	//$rs['halt_date_period'] = "2017-05-17";
+	//$rs['halt_date_period'] = "_2017-08-31";
+	//$rs['halt_date_period'] = "_2007-08-31~2018-08-31";
+	$halfdate = explode("_", $rs['halt_date_period']);
+	//print_r($halfdate);
+	
 	//判斷有沒有搜尋到資料
 	if (isset($rs)){
+		
+	//判斷全部停權日期 及 部分停權日期	
+	//如果 $halfdate的array 內 [0]與[1]的位置都有值 代表 全部停權日期 及部分停權日期都有值
+	if(empty($halfdate[0]) == FALSE && empty($halfdate[1]) == FALSE){
+		
+		$parthalfdate = $halfdate[1];
+		$allhalfdate = $halfdate[0];
+		
+	//如果 $halfdate的array 內 [0]的位置都有值  [1]的位置沒有值 代表 全部停權日期有值	
+	}else if(empty($halfdate[0]) == FALSE && empty($halfdate[1]) == TRUE){
+		
+		$allhalfdate = $halfdate[0];
+		$parthalfdate = null;
+		
+	//如果 $halfdate的array 內 [1]的位置都有值  [0]的位置沒有值 代表 部分停權日期有值	
+	}else if(empty($halfdate[0]) == TRUE && empty($halfdate[1]) == FALSE){
+		
+		$parthalfdate = $halfdate[1];
+		$allhalfdate = null;
+	}else{
+		
+		$parthalfdate = null;	
+		$allhalfdate = null;
+	}
+	
+	$parthalfdate=explode("~",$parthalfdate);
+	$allhalfdate =explode("~",$allhalfdate);
+	
+	//print_r($parthalfdate);
+	//print_r($allhalfdate);
+	
+	
+	
+	
+		//判斷學生 條碼     y = 有效  ,  n = 過期   , b = 全退    ,  c = 沒課程
+		
+		if($rs['validatesta'] == 'n'){
+			
+			echo json_encode(array('msg' => '此學生條碼已過期！'));
+			
+			return;
+		}
+		
+		if($rs['validatesta'] == 'b'){
+			
+			echo json_encode(array('msg' => '此學生已退費！'));
+			
+			return;
+		}
+		
+		if($rs['validatesta'] == 'c'){
+			
+			echo json_encode(array('msg' => '此學生沒有選課程！'));
+			
+			return;
+					
+		}
+
+		
+		
+		
+		/*if($rs['halt_sta'] == 'y' && empty($allhalfdate[0]) && empty($allhalfdate[1])){
+			echo "此學生已被停權 無時間";
+			echo json_encode(array('msg' => '此學生帳號已被停權！'));
+			
+			return;
+		}*/
+		
+		//  halt_sta = y 且只有開始時間 	且目前時間大於開始時間
+		if($rs['halt_sta'] == 'y' && !empty($allhalfdate[0]) && 
+		
+			empty($allhalfdate[1])  && strtotime($date) >= strtotime($allhalfdate[0])){
+				
+			$allhalfdate[0] = increase10years($allhalfdate[0]);	
+			
+			$msg =  "此學生帳號從 ".$allhalfdate[0]."開始被停權!";
+			
+			echo json_encode(array('msg' => "$msg"));
+			
+			return;
+		}
+			
+		//  halt_sta = y 且只有結束時間 且目前時間小於結束時間	
+		if($rs['halt_sta'] == 'y' && empty($allhalfdate[0]) && 
+			
+			!empty($allhalfdate[1]) && strtotime($date) <= strtotime($allhalfdate[1]) ){
+				
+			$allhalfdate[1] = increase10years($allhalfdate[1]);	
+				
+			$msg = "此學生帳號已被停權至 ".$allhalfdate[1];
+			
+			echo json_encode(array('msg' => "$msg"));
+			
+			return;
+		}
+			
+		// halt_sta = y 有開始時間及結束時間 且目前時間在時間區間內	
+		if($rs['halt_sta'] == 'y' && !empty($allhalfdate[0]) && 
+		
+			!empty($allhalfdate[1])&& strtotime($date) <= strtotime($allhalfdate[1])){
+			
+			$allhalfdate[0] = increase10years($allhalfdate[0]);	
+			
+			$allhalfdate[1] = increase10years($allhalfdate[1]);	
+				
+			$msg = "此學生帳號從 ".$allhalfdate[0]."開始停權至".$allhalfdate[1];
+			
+			echo json_encode(array('msg' => "$msg"));
+			
+			return;
+		}				
+
+
+			
+		
+		/*if($rs['halt_func_sta'] == 'y' && stristr($rs['halt_part_func'] , "fee-note") == TRUE && 
+		
+		empty($parthalfdate[0]) && empty($parthalfdate[1])){
+			echo "此學生領書功能已被停權 無時間";
+			echo json_encode(array('msg' => '此學生領書功能已被停權！'));
+			
+			return;
+		}*/
+		
+		//halt_func_sta = y 和 halt_part_func = fee-note 且只有開始時間 且目前時間大於開始時間
+		if($rs['halt_func_sta'] == 'y' && stristr($rs['halt_part_func'] , "fee-note") == TRUE && 
+		
+			!empty($parthalfdate[0]) && empty($parthalfdate[1])  && strtotime($date) >= strtotime($parthalfdate[0])){
+			
+			$parthalfdate[0] = increase10years($parthalfdate[0]);
+				
+			$msg = "此學生 ' 領書功能 ' 從 ".$parthalfdate[0]."開始被停權";
+			
+			echo json_encode(array('msg' => "$msg"));
+			
+			return;
+		}
+		
+		//halt_func_sta = y 和 halt_part_func = fee-note 且只有結束時間 且目前時間小於結束時間
+		if($rs['halt_func_sta'] == 'y' && stristr($rs['halt_part_func'] , "fee-note") == TRUE && 
+		
+			empty($parthalfdate[0]) && !empty($parthalfdate[1]) && strtotime($date) <= strtotime($parthalfdate[1]) ){
+			
+			$parthalfdate[1] = increase10years($parthalfdate[1]);
+				
+			$msg = "此學生 ' 領書功能 ' 已被停權至 ".$parthalfdate[1];
+			
+			echo json_encode(array('msg' => "$msg"));
+			
+			return;
+		}
+			
+		//halt_func_sta = y 和 halt_part_func = fee-note 有開始時間及結束時間 且目前時間在時間區間內	
+		if($rs['halt_func_sta'] == 'y' && stristr($rs['halt_part_func'] , "fee-note") == TRUE && 
+		
+			!empty($parthalfdate[0]) && !empty($parthalfdate[1])&& strtotime($date) <= strtotime($parthalfdate[1])){
+				
+			$parthalfdate[0] = increase10years($parthalfdate[0]);
+			
+			$parthalfdate[1] = increase10years($parthalfdate[1]);
+					
+			$msg = "此學生 ' 領書功能 ' 功能從 ".$parthalfdate[0]."開始停權至".$parthalfdate[1];
+			
+			echo json_encode(array('msg' => "$msg"));
+			
+			return;
+		}
 	
 		$takebook=$rs['take']; 		
 		$takebook=explode(";", $takebook);
@@ -67,8 +247,28 @@
 		
 	}
 
-	//執行  借書資料查詢
 	
+
+	//更正資料庫抓出來的時間
+	function decrease10years($data){
+		
+	$date=date_create($data);
+	
+	date_sub($date,date_interval_create_from_date_string("10 years"));
+	
+	return date_format($date,"Y-m-d");
+	
+	}
+	
+	function increase10years($data){
+		
+	$date=date_create($data);
+	
+	date_add($date,date_interval_create_from_date_string("10 years"));
+	
+	return date_format($date,"Y-m-d");
+	
+	}
 	
 	
 ?>

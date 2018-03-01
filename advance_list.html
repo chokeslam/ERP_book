@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+		Remove this if you use the .htaccess -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<title>index</title>
+		<meta name="author" content="cokes">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<link rel="stylesheet" type="text/css" href="datatables/DataTables-1.10.16/css/dataTables.bootstrap4.css"/>
+		<link rel="stylesheet" type="text/css" href="datatables/Bootstrap-4-4.0.0/css/bootstrap.css"/>
+		<script type="text/javascript" src="datatables/jQuery-3.2.1/jquery-3.2.1.js"></script>
+		<script type="text/javascript" src="datatables/DataTables-1.10.16/js/jquery.dataTables.js"></script>
+		<script type="text/javascript" src="datatables/DataTables-1.10.16/js/dataTables.bootstrap4.js"></script>
+	<style>
+		.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+			background-color: #ADD8E6;
+		}
+		tfoot {
+     		display: table-header-group;
+		}
+		::-webkit-input-placeholder {
+   			text-align: center;
+		}
+
+
+</style>
+	</head>
+
+	<body style="font-family:Microsoft JhengHei;background-color:#E0E0E0;">
+		
+		<div class="row">
+			
+			<div class="col-12">
+				
+				<div id="nav"></div>
+				
+			</div>
+			<br />
+			<br />
+			<br />
+			<div class="col-12">
+				<table id="example" class="table table-striped table-bordered table table-sm table-hover" cellspacing="0" width="100%" style="text-align: center;">
+			
+					<thead class="bg-primary text-white">
+           				 <tr>
+           				 	
+           				 	<th>nno</th>
+               			 	<th>學校</th>
+                			<th>學生姓名</th>
+                			<th>負責業務</th>
+                			<th>日期</th>
+                			
+                			
+                			<th>預領書籍內容</th>
+                			<th>修改/還書</th>
+            			</tr>
+        			</thead>
+        			<tfoot>
+            			<tr>
+                			<th>nno</th>
+                			<th>學校</th>
+                			<th>學生姓名</th>
+                			<th>負責業務</th>
+                			<th>日期</th>
+                			
+                			<th>預領書籍內容</th>
+                			<th>修改/還書</th>
+            			</tr>
+        			</tfoot>        			
+
+				</table>
+				
+			</div>
+
+		</div>
+		<!------------------------------------------------------------------------------------------------->
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+  			
+  			<div class="modal-dialog modal-lg" role="document">
+    			
+    			<div class="modal-content">
+      				
+      				<div class="modal-header">
+        				
+        				<h5 class="modal-title text-primary font-weight-bold" id="modal">修改/還書</h5>
+        				
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          				
+          					<span aria-hidden="true">&times;</span>
+        				
+        				</button>
+      				
+      				</div>
+      				
+      				<div class="modal-body row" id='input'>
+      					
+            			<label for="inputno" class="col-sm-3 col-form-label">借書單號 :</label>
+    					<div class="col-sm-9">
+      					<input type="text" class="form-control" id="inputno" readonly="readonly">
+    					</div>
+    					
+            			<label for="inputschool" class="col-sm-3 col-form-label">學校名稱 :</label>
+    					<div class="col-sm-9">
+      						<input type="text" class="form-control" id="inputschool" style="margin-top: 10px;">
+    					</div>
+    					
+            			<label for="inputstudent" class="col-sm-3 col-form-label">學生姓名 :</label>
+    					<div class="col-sm-9">
+      						<input type="text" class="form-control" id="inputstudent" style="margin-top: 10px;">
+    					</div>
+            			<label for="inputsales" class="col-sm-3 col-form-label">業務名稱 :</label>
+    					<div class="col-sm-9">
+      						<input type="text" class="form-control" id="inputsales" style="margin-top: 10px;">
+    					</div>
+            			<label for="inputdate" class="col-sm-3 col-form-label">借書日期 :</label>
+    					<div class="col-sm-9">
+      						<input type="text" class="form-control" id="inputdate" readonly="readonly" style="margin-top: 10px;">
+    					</div>
+    					<label for="inputtextarea" class="col-sm-3 col-form-label">已借書籍:</label>
+    					<div class="col-sm-9" >
+      						<div id="bookname" style="margin-top: 10px;border-style: solid;border-color: #c5cfd4;border-width:1px; border-radius:5px;">
+      							
+      						</div>
+    						
+    					</div>
+    					<label for="inputtextarea" class="col-sm-3 col-form-label">要還書籍:</label>
+    					<div class="col-sm-9">
+      						<div id="rebookname" style="margin-top: 10px;border-style: solid;border-color: #c5cfd4;border-width:1px; border-radius:5px; color: red;"></div>
+    						
+    					</div>
+    					<label for="inputtextarea" class="col-sm-3 col-form-label" style="display: none">書籍條碼:</label>
+    					<div class="col-sm-9" style="display: none">
+      						<div id="rebookcode" style="margin-top: 10px;border-style: solid;border-color: #c5cfd4;border-width:1px; border-radius:5px;"></div>
+    						
+    					</div>      					    					    					
+            			<label for="inputbar" class="col-sm-3 col-form-label">還書條碼掃描:</label>
+    					<div class="col-sm-9">
+      						<input type="text" class="form-control" id="bar" style="margin-top: 10px;">
+    					</div>
+    					<div class="col-sm-3"></div>
+						<div class="col-sm-9" id="alert" style="color: red;margin-top: 10px;"></div>
+						
+						<label for="inputname" class="col-sm-3 col-form-label">承辦人 :</label>
+    					<div class="col-sm-9">
+      						<input type="text" class="form-control" id="inputadmin" style="margin-top: 10px; ">
+    					</div>  		     					     					     					              			
+      				</div>
+      				
+      				<div class="modal-footer">
+        				
+        				<button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+        				
+        				<button type="button" id="submit" class="btn btn-primary">確認送出</button>
+      				
+      				</div>
+    			
+    			</div>
+  			
+  			</div>
+		
+		</div>
+		<div id="mymodal"></div>
+		<div id="mymodal1"></div>
+		<div id="mymodal2"></div>
+		
+		<!------------------------------------------------------------------------------------------------->
+	</body>
+	
+	<!--<script src="jquery-3.2.1.min.js"></script>-->
+	
+	<script type="text/JavaScript" src="advance_list.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>	
+	</body>
+</html>
