@@ -37,10 +37,6 @@
 					
 			//使用 datatable
 			var table =	$('#example').DataTable({
-			
-			
-"sScrollXInner": "50%",
-"bScrollCollapse": true,
             //"sPaginationType" : "full_numbers",
             "oLanguage" : {
                 "sLengthMenu": "每頁顯示 _MENU_ 筆紀錄",
