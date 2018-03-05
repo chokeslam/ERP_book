@@ -119,15 +119,7 @@ table : iostock
         <td align="center"></td>
 
     </tr>
-    <tr>
-        <td align="center">5</td>
-        <td align="center">UP_Time</td>
-        <td align="center">timestamp</td>
-        <td align="center">No</td>
-        <td align="center"></td>
-        <td align="center">時戳</td>
-        <td align="center"></td>
-    </tr>
+
 </table>
 
 
