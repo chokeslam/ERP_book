@@ -118,6 +118,15 @@ table : iostock
         <td align="center">異動日期</td>
         <td align="center"></td>
     </tr>
+    <tr>
+        <td align="center">5</td>
+        <td align="center">UP_Time</td>
+        <td align="center">timestamp</td>
+        <td align="center">No</td>
+        <td align="center">CURRENT_TIMESTAMP</td>
+        <td align="center">時戳</td>
+        <td align="center"></td>
+    </tr>
 
 </table>
 
