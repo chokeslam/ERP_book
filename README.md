@@ -119,10 +119,6 @@ table : iostock
         <td align="center"></td>
 
     </tr>
-    
-
-       
-
     <tr>
         <td align="center">5</td>
         <td align="center">UP_Time</td>
