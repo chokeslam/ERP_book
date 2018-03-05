@@ -1,5 +1,7 @@
 $(document).ready(function() {
 	
+
+		
 		//載入 index.html 的 預領轉領書表單	
 		$('#mymodal').load('index.html #formmodal');
 			
@@ -14,9 +16,46 @@ $(document).ready(function() {
 				$.getScript("modal.js");
 				
 			});
-		});	
+		});
+		
+		$("#addmodal").on('show.bs.modal', function(){
+ 			
+    		var $this = $(this);
+          
+        	var $modal_dialog = $this.find('.modal-dialog');
+           
+        	$this.css('display', 'block');
+          
+        	$modal_dialog.css({'margin-top': Math.max(0, ($(window).height() - $modal_dialog.height()) / 2) });
+          
+   	 	});
+   	 	
+   	 	$("#searchnote").on('click',function(){
+					
+			notenno_request ();
+				
+		});
+		
+		$("#ok1").on('click',function(){
+					
+			createstock_request ();
+				
+		});
+		
+		$("#createstock").on('hide.bs.modal', function(){
+		
+		 window.location.reload();
+	
+		});
+		
+		$("#addmodal").on('hide.bs.modal', function(){
+		
+		 window.location.reload();
+	
+		});					
 	
 		var table =	$('#example').DataTable({
+
             	//"sPaginationType" : "full_numbers",
         	"oLanguage" : {
         	
@@ -48,7 +87,7 @@ $(document).ready(function() {
 			dom:'Brt<"justify-content-center"p>',
 			  	
 			//每頁顯示的資料筆數調整
-			"lengthMenu": [[12, 25, 50, -1], [12, 25, 50, "All"]],
+			"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 			  		
 			select: true,
 			  	
@@ -57,7 +96,7 @@ $(document).ready(function() {
         		
         		//資料擺放在列的順序	
         	"columns":[
-        		        			
+        		    	        			
             		{ "data": "nno" },				//adv_no : 借貨單號
             						
             		{ "data": "PD_No" },			//school_name : 學校名稱
@@ -69,8 +108,36 @@ $(document).ready(function() {
             		{ "data": "ST_Place" },			//sales_name : 業務名稱            						                  	
       	 		
       	 			{ "data": "PR_Cdate" },
-      	 	]
-      		
+      	 	],
+      	 	
+      	 	"columnDefs": [
+    			
+    			{ className: "bbbb", "targets": [3] }
+  			],
+  			 "initComplete": function(settings, json) {
+  			 	
+  			 	
+  			 		/* $('table tr').each(function () {
+  			 		 	$('td').eq(3).css('color','red');
+  			 		 });*/
+  			 		
+  			 		$('tbody tr').each(function () {
+  			 			
+                		var a =	$(this).children().eq(3).text();
+                		
+                		if(a<100){
+                			
+                			$(this).children().eq(3).css('background-color','red');
+                			
+                		}
+                	
+            		});
+  			 	
+  			 	
+    			
+  			
+  			}	
+      	 			
   		});
 			
     		//每個欄位上的 搜尋欄位 
@@ -99,7 +166,101 @@ $(document).ready(function() {
             		}
             		
         		} );
-        		
+        		 		
     		} );
 
+    	 
+    	/* $('#example tbody').on('click', 'tr', function () {
+        	
+        	var name = $('td', this).eq(3).text();
+        	
+        	
+        		
+        		$('td', this).eq(3).css('color','red');
+        		//alert( '數量為 '+name+'' );
+        	
+        
+    	} );	*/
+    	function createstock_request (){
+					
+			$.ajax({
+				type: "POST" ,
+						
+				url: "createstock.php" ,
+						
+				data:{
+					
+					notenno : $("#nnonote").val(),
+					pdno : $("#pdno").val(),
+					qty : $("#qty").val(),
+					place : $("#place").val()
+							
+				} ,
+						
+				datatype: "json" ,
+						
+				success: function(data) {
+					
+					
+					
+					if (typeof data.msg == "undefined"){
+						
+						alert(data);
+						window.location.href = "pd_list.html";
+						
+					}else{
+						
+						$("#msg2").text(data.msg);
+					}
+									
+				} ,
+        		error: function(jqXHR) {
+            				
+					alert("發生錯誤: " + jqXHR.status);
+       	 		}
+			});
+		};    	
+    	
+    	
+    	function notenno_request (){
+					
+			$.ajax({
+				type: "POST" ,
+						
+				url: "getnote.php" ,
+						
+				data:{
+					
+					notenno:$("#notenno").val(),
+							
+				} ,
+						
+				datatype: "json" ,
+						
+				success: function(data) {
+					
+					if (typeof data.msg == "undefined"){
+							
+						$("#createstock").modal();
+						
+						$("#nnonote").val(data.nno);
+						
+						$("#course").val(data.course);
+						
+						$("#bookname1").val(data.note);
+								
+					}else{
+							
+						$("#msg3").text(data.msg);
+						
+						$("#notenno").val("");	
+					}
+									
+				} ,
+        		error: function(jqXHR) {
+            				
+					alert("發生錯誤: " + jqXHR.status);
+       	 		}
+			});
+		};
 });
