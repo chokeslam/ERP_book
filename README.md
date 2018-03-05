@@ -121,7 +121,7 @@ table : iostock
     </tr>
     
 
-    </tr>   
+       
 
     <tr>
         <td align="center">5</td>
@@ -133,6 +133,9 @@ table : iostock
         <td align="center"></td>
     </tr>
 </table>
+
+
+
 
 書籍條碼 共9碼
 <table>
