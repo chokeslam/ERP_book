@@ -1,10 +1,14 @@
 <?php
     header('Content-Type: application/json; charset=UTF-8');
 	
-	$notenno = $_REQUEST["notenno"];	
+	$notenno = $_REQUEST["notenno"];
+		
 	$PD_No = $_REQUEST["pdno"];
+	
 	$ST_Qty = $_REQUEST["qty"];
-	$ST_Place = $_REQUEST["place"];	
+	
+	$ST_Place = $_REQUEST["place"];
+		
 	
 	$PR_Cdate= date("Ymd",mktime(0,0,0,date("m"),date("d"),date("Y")));
 	
@@ -65,8 +69,24 @@
         
 
         return;
-    }					
-	/*$my_db= mysqli_connect("localhost" , "root" , "");
+    }
+		
+	$sql = "SELECT nno , PD_No FROM pdstock where PD_No = '$PD_No'";
+	
+	$result= mysqli_query($my_db, $sql);
+	
+	$rs= mysqli_fetch_assoc($result);
+	
+	if (isset($rs) || !empty($rs)) {
+		
+		$str = "條碼編號 ".$PD_No." 已重複 請至書籍庫存查詢";
+		
+		echo json_encode(array('msg' => $str));
+        
+
+        return;
+    }						
+	$my_db= mysqli_connect("localhost" , "root" , "");
 	
 	mysqli_select_db($my_db, "bookerp");
 	
@@ -75,7 +95,7 @@
 	$sql = " INSERT INTO pdstock VALUES 
 				 (null , '$notenno' , '$PD_No' , '$ST_Qty' , '$ST_Place' , '$PR_Cdate' , CURRENT_TIMESTAMP)";;
 	
-	$result= mysqli_query($my_db, $sql);*/
+	$result= mysqli_query($my_db, $sql);
 		
 	
 	echo json_encode("新增成功");
