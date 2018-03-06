@@ -8,8 +8,8 @@
 	$ST_Qty = $_REQUEST["qty"];
 	
 	$ST_Place = $_REQUEST["place"];
-			
-	$PR_Cdate= date("Y-m-d",mktime(0,0,0,date("m"),date("d"),date("Y")));
+	
+	$PR_Update= date("Y-m-d",mktime(0,0,0,date("m"),date("d"),date("Y")));
 	
 	if (!isset($_REQUEST['notenno']) || empty($_REQUEST['notenno'])) {
 		
@@ -52,51 +52,38 @@
 	mysqli_select_db($my_db, "bookerp");
 	
 	mysqli_query($my_db,"SET NAMES 'utf8'");
-	
-	$sql = "SELECT nno , PD_No FROM pdstock where nno = '$notenno'";
+		
+	$sql = "SELECT PD_No FROM pdstock where nno != '$notenno'";
 	
 	$result= mysqli_query($my_db, $sql);
-	
-	$rs= mysqli_fetch_assoc($result);
-	
 		
-	if (isset($rs) || !empty($rs)) {
-		
-		$str = "書籍 No.".$notenno." 已有庫存資料 請至書籍庫存查詢";
-		
-		echo json_encode(array('msg' => $str));
-        
-
-        return;
-    }
-		
-	$sql = "SELECT nno , PD_No FROM pdstock where PD_No = '$PD_No'";
+	$num = mysqli_num_rows($result);
 	
-	$result= mysqli_query($my_db, $sql);
+	$check = array();
 	
-	$rs= mysqli_fetch_assoc($result);
+	for ($i=0; $i < 9; $i++) {
+		 
+		$rs= mysqli_fetch_assoc($result);
+		
+		$checkstr = $rs['PD_No'];
+			
+		array_push($check,"$checkstr");
+	}
 	
-	if (isset($rs) || !empty($rs)) {
+	if (in_array($PD_No, $check)) {
 		
 		$str = "條碼編號 ".$PD_No." 已重複 請至書籍庫存查詢";
 		
 		echo json_encode(array('msg' => $str));
         
-
         return;
     }
-							
-	$my_db= mysqli_connect("localhost" , "root" , "");
 	
-	mysqli_select_db($my_db, "bookerp");
+	$sql = "UPDATE pdstock SET PD_No = '$PD_No' , ST_Qty = '$ST_Qty' , ST_Place = '$ST_Place' , PR_Update = '$PR_Update' 
 	
-	mysqli_query($my_db,"SET NAMES 'utf8'");
-	
-	$sql = "INSERT INTO pdstock VALUES 
-				 (null , '$notenno' , '$PD_No' , '$ST_Qty' , '$ST_Place' , null , '$PR_Cdate' , CURRENT_TIMESTAMP)";
+			where nno = '$notenno'";	
 	
 	$result= mysqli_query($my_db, $sql);
-		
 	
-	echo json_encode("新增成功");
+	echo json_encode("成功");
 ?>

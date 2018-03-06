@@ -52,8 +52,10 @@ $(document).ready(function() {
 		
 		 window.location.reload();
 	
-		});					
+		});
+		
 	
+						
 		var table =	$('#example').DataTable({
 
             	//"sPaginationType" : "full_numbers",
@@ -108,6 +110,17 @@ $(document).ready(function() {
             		{ "data": "ST_Place" },			//sales_name : 業務名稱            						                  	
       	 		
       	 			{ "data": "PR_Cdate" },
+
+               		{                
+                  	  "className":'click',
+                  
+                  	  "orderable":false,
+                 	
+                      "data":null,
+                 	
+                 	// bootstrap 互動視窗class
+                      "defaultContent":'<button type="button" class="btn btn-link" data-toggle="modal" data-target="#createstock">'+"修改"+'</button>'
+                    },        	 			
       	 	],
       	 	
       	 	"columnDefs": [
@@ -148,7 +161,9 @@ $(document).ready(function() {
         		$(this).html( '<input type="text"  placeholder="搜尋 '+title+'" />' );
         	
     		} );
- 	
+ 			
+ 			$('.click input').hide();
+ 			
     			// DataTable
     		var table = $('#example').DataTable();
  
@@ -169,7 +184,30 @@ $(document).ready(function() {
         		 		
     		} );
 
-    	 
+    	$('#example tbody').on('click','td.click button',function(){
+    		
+    		 		
+    		$("h5").text("修改書籍庫存");
+    		
+    		$("#place").replaceWith('<input type="text" class="form-control" id="place" style="margin-top: 10px;">');
+    		
+    		$("#ok1").attr('id','ok2');
+    		
+    		var nno =$(this).parents('tr').children("td").eq(0).text();
+    		
+    		searchpdstock_request (nno);
+    	
+    		$("#ok2").unbind( );
+    		
+    		$("#ok2").on('click',function(){
+					
+				updatestock_request ();
+				
+			});
+    	 		
+    	});		
+		
+	
     	/* $('#example tbody').on('click', 'tr', function () {
         	
         	var name = $('td', this).eq(3).text();
@@ -181,6 +219,86 @@ $(document).ready(function() {
         	
         
     	} );	*/
+    	
+    	function updatestock_request (){
+					
+			$.ajax({
+				type: "POST" ,
+						
+				url: "updatestock.php" ,
+						
+				data:{
+					
+					notenno : $("#nnonote").val(),
+					pdno : $("#pdno").val(),
+					qty : $("#qty").val(),
+					place : $("#place").val()
+							
+				} ,
+						
+				datatype: "json" ,
+						
+				success: function(data) {
+					
+					
+					
+					if (typeof data.msg == "undefined"){
+						
+						alert(data);
+						window.location.href = "pd_list.html";
+						
+					}else{
+						
+						$("#msg2").text(data.msg);
+					}
+									
+				} ,
+        		error: function(jqXHR) {
+            				
+					alert("發生錯誤: " + jqXHR.status);
+       	 		}
+			});
+		};    
+    	
+    	
+    	function searchpdstock_request (nno){
+					
+			$.ajax({
+				type: "POST" ,
+						
+				url: "searchpdstock.php" ,
+						
+				data:{
+					
+					notenno : nno,
+										
+				} ,
+						
+				datatype: "json" ,
+						
+				success: function(data) {
+					
+					$("#nnonote").val(data.nno);
+						
+					$("#course").val(data.course);
+						
+					$("#bookname1").val(data.note);
+					
+					$("#pdno").val(data.PD_No);
+					
+					$("#qty").val(data.ST_Qty);
+					
+					$("#place").val(data.ST_Place);						
+									
+				} ,
+        		error: function(jqXHR) {
+            				
+					alert("發生錯誤: " + jqXHR.status);
+       	 		}
+			});
+		};    	
+    	
+    	
     	function createstock_request (){
 					
 			$.ajax({
