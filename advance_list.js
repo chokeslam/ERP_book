@@ -16,6 +16,8 @@
 			}
 			
 			//載入 index.html 的 預領轉領書表單	
+
+      
 			$('#mymodal').load('index.html #formmodal');
 			
 			$('#mymodal1').load('index.html #takemodal');

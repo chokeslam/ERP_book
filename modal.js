@@ -22,7 +22,15 @@
 		
 	});
 
+	$("#inputnno").keypress(function(){
+  		
+  		if (event.which === 13){
+			
+			$("#find").click();
 
+    	}   
+  	
+  	});
 
 	$("#prompt").on('show.bs.modal', function(){
  			

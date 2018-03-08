@@ -35,6 +35,16 @@ $(document).ready(function() {
 			notenno_request ();
 				
 		});
+
+		$("#notenno").keypress(function(){
+  		
+  		if (event.which === 13){
+			
+			$("#searchnote").click();
+
+    	}   
+  	
+  		});
 		
 		$("#ok1").on('click',function(){
 					
@@ -54,6 +64,7 @@ $(document).ready(function() {
 	
 		});
 		
+
 	    
 
 						
