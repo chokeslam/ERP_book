@@ -54,11 +54,12 @@ $(document).ready(function() {
 	
 		});
 		
-	
+	    
+
 						
 		var table =	$('#example').DataTable({
 
-            	//"sPaginationType" : "full_numbers",
+
         	"oLanguage" : {
         	
                 	"sLengthMenu": "每頁顯示 _MENU_ 筆紀錄",
@@ -98,16 +99,20 @@ $(document).ready(function() {
         		
         		//資料擺放在列的順序	
         	"columns":[
-        		    	        			
-            		{ "data": "nno" },				//adv_no : 借貨單號
+        		    
+        		    
+
+            		{ "data": "nno"  },				
             						
-            		{ "data": "PD_No" },			//school_name : 學校名稱
+            		{ "data": "PD_No" },			
             						
-            		{ "data": "note" },			//student_name : 學生名稱            	
+            		{ "data": "note" },			           	
             						
-            		{ "data": "ST_Qty" },			//lend_date : 借貨日期
+            		{ "data": "ST_Qty" },
+
+            		{ "data": "ST_mi" },			
             	
-            		{ "data": "ST_Place" },			//sales_name : 業務名稱            						                  	
+            		{ "data": "ST_Place" },			          						                  	
       	 		
       	 			{ "data": "PR_Cdate" },
 
@@ -125,7 +130,17 @@ $(document).ready(function() {
       	 	
       	 	"columnDefs": [
     			
-    			{ className: "bbbb", "targets": [3] }
+    			{ className: "bbbb", "targets": [3] },
+    			
+    			{ "width": "10%", "targets": 0 },
+    			{ "width": "10%", "targets": 1 },
+    			{ "width": "20%", "targets": 2 },
+    			{ "width": "10%", "targets": 3 },
+    			{ "width": "10%", "targets": 4 },
+    			{ "width": "10%", "targets": 5 },
+    			{ "width": "10%", "targets": 6 },
+    			{ "width": "10%", "targets": 7 }
+    			
   			],
   			 "initComplete": function(settings, json) {
   			 	
@@ -133,14 +148,19 @@ $(document).ready(function() {
   			 		/* $('table tr').each(function () {
   			 		 	$('td').eq(3).css('color','red');
   			 		 });*/
-  			 		
   			 		$('tbody tr').each(function () {
   			 			
-                		var a =	$(this).children().eq(3).text();
+						var st_qty = parseInt($(this).children().eq(3).text());
+						
+						var st_mi  = parseInt($(this).children().eq(4).text());
                 		
-                		if(a<100){
+                		if(st_mi > st_qty){
                 			
-                			$(this).children().eq(3).css('background-color','red');
+                			//$(this).children().eq(3).css('color' , 'red');
+                			//$(this).css('color' , 'red');
+                			$(this).children().eq(3).addClass("bg-danger text-white");
+
+                			$("#lowqty").append("<li>"+$(this).children().eq(2).text()+"</li><br />");
                 			
                 		}
                 	
@@ -152,13 +172,32 @@ $(document).ready(function() {
   			}	
       	 			
   		});
+
+  		$("#lowbtn").on('click' ,function(){
+
+  			$("#table").removeClass("col-12");
+  			$(".col-5").removeClass("col-8");
+  			$("#tttt").show();
+
+
+  		});
+
+  		
+
+		$("#x").on('click',function(){
+
+			$("#tttt").hide();
+			$("#table").addClass("col-12");
+			$(".col-5").addClass("col-8");
+
+		});
 			
     		//每個欄位上的 搜尋欄位 
 			$('#example tfoot th').each( function () {
 				
         		var title = $(this).text();
         		
-        		$(this).html( '<input type="text"  placeholder="搜尋 '+title+'" />' );
+        		$(this).html( '<input type="text"  placeholder="搜尋 '+title+'"style="width: 100%;" />' );
         	
     		} );
  			
@@ -232,6 +271,7 @@ $(document).ready(function() {
 					notenno : $("#nnonote").val(),
 					pdno : $("#pdno").val(),
 					qty : $("#qty").val(),
+					miqty : $("#miqty").val(),
 					place : $("#place").val()
 							
 				} ,
@@ -287,6 +327,8 @@ $(document).ready(function() {
 					$("#pdno").val(data.PD_No);
 					
 					$("#qty").val(data.ST_Qty);
+
+					$("#miqty").val(data.ST_mi);
 					
 					$("#place").val(data.ST_Place);						
 									
@@ -311,6 +353,7 @@ $(document).ready(function() {
 					notenno : $("#nnonote").val(),
 					pdno : $("#pdno").val(),
 					qty : $("#qty").val(),
+					miqty : $("#miqty").val(),
 					place : $("#place").val()
 							
 				} ,

@@ -7,7 +7,7 @@
 	
 	mysqli_query($my_db,"SET NAMES 'utf8'");
 	
-	$sql = "SELECT pdstock.nno , pdstock.PD_No , note.note , pdstock.ST_Qty , pdstock.ST_Place , pdstock.PR_Cdate FROM pdstock INNER JOIN note ON pdstock.nno=note.nno ";
+	$sql = "SELECT pdstock.nno , pdstock.PD_No , note.note , pdstock.ST_Qty , pdstock.ST_mi , pdstock.ST_Place , pdstock.PR_Cdate FROM pdstock INNER JOIN note ON pdstock.nno=note.nno ";
 			
 	$result = mysqli_query ($my_db, $sql);
 	

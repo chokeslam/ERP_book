@@ -6,6 +6,8 @@
 	$PD_No = $_REQUEST["pdno"];
 	
 	$ST_Qty = $_REQUEST["qty"];
+
+	$ST_mi = $_REQUEST["miqty"];
 	
 	$ST_Place = $_REQUEST["place"];
 			
@@ -31,7 +33,14 @@
 
         return;
     }
-	
+
+	if (!isset($_REQUEST['miqty']) || empty($_REQUEST['miqty'])) {
+		
+        echo json_encode(array('msg' => '沒有輸入最低庫存數量！'));
+
+        return;
+    }
+
 	if (!isset($_REQUEST['place']) || empty($_REQUEST['place'])) {
 		
         echo json_encode(array('msg' => '沒有輸入庫存地！'));
