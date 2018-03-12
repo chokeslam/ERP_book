@@ -88,11 +88,7 @@
 	//扣庫存
 	function Buckle_stock($data_PDNo,$data_num){
 					
-		$my_db= mysqli_connect("localhost" , "root" , "");
-	
-		mysqli_select_db($my_db, "bookerp");
-	
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$target = array();
 		
@@ -137,11 +133,7 @@
 	//取得預領單號 function
 	function advance_number (){
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = "SELECT MAX(adv_no) FROM iostock WHERE adv_no LIKE 'L-%'";
 		
@@ -176,11 +168,7 @@
 	//取得流水號 function
 	function Form_number (){
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = "SELECT MAX(IO_Blno) FROM iostock";
 		
@@ -217,11 +205,7 @@
 		
 		$QT_Qty = 1;
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		for ($i=0; $i <$data_num ; $i++) {
 				$PD_no = $data_pdno[$i];
@@ -245,11 +229,7 @@
 		
 		$date= date("Y-m-d",mktime(0,0,0,date("m"),date("d"),date("Y")));
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");
-	
-		mysqli_select_db($my_db, "bookerp");
-	
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = "INSERT INTO lendstock VALUES
 				(null , '$advno' , '$school_name' , '$student_name' , '$sales_name' , '$bookname' , '$date' , null , CURRENT_TIMESTAMP)";

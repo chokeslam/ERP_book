@@ -39,11 +39,7 @@
 	
 	$num = count($rebook_PDNO);
 	
-	$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-	mysqli_select_db($my_db, "bookerp");
-		
-	mysqli_query($my_db,"SET NAMES 'utf8'");	
+	include('mysql.php');
 	
 	$sql = "SELECT book_name , end_date FROM lendstock WHERE adv_no = '$adv_no'";
 
@@ -66,11 +62,7 @@
 	
 	function update_lendstock($rebookname,$bookname,$adv_no){
 
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");			
+		include('mysql.php');
 		
 		$rebookname = substr($rebookname, 0 , -1);
 		
@@ -113,11 +105,7 @@
 	
 	function add_restock($adv_no,$rebookname,$admin){
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = "SELECT adv_no , school_name , student_name FROM lendstock WHERE adv_no = '$adv_no'";
 
@@ -148,11 +136,7 @@
 		
 		$IN_Qty = 1;
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		for ($i=0; $i < $num ; $i++) { 
 		
@@ -173,11 +157,7 @@
 	//取得流水號 function
 	function Form_number (){
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = "SELECT MAX(IO_Blno) FROM iostock";
 		
@@ -209,11 +189,7 @@
 	//加庫存 function     
 	function Buckle_stock ($rebook_PDNO , $num){					//$data1 = $ST_Qty (庫存數量)  $data2 = $PD_No  (書籍編號)
 				
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		for ($i=0; $i < $num ; $i++) {
 			

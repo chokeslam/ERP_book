@@ -56,11 +56,7 @@
 		
 	}
 	
-	$my_db= mysqli_connect("localhost" , "root" , "");
-	
-	mysqli_select_db($my_db, "bookerp");
-	
-	mysqli_query($my_db,"SET NAMES 'utf8'");
+	include('mysql.php');
 	
 	$sql = "SELECT nno , PD_No FROM pdstock where nno = '$notenno'";
 	
@@ -95,11 +91,7 @@
         return;
     }
 							
-	$my_db= mysqli_connect("localhost" , "root" , "");
-	
-	mysqli_select_db($my_db, "bookerp");
-	
-	mysqli_query($my_db,"SET NAMES 'utf8'");
+	include('mysql.php');
 	
 	$sql = "INSERT INTO pdstock VALUES 
 				 (null , '$notenno' , '$PD_No' , '$ST_Qty' , '$ST_Place' , null , '$PR_Cdate' , CURRENT_TIMESTAMP)";

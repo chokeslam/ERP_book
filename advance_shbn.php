@@ -6,13 +6,7 @@
 	
 	$bookname = $_REQUEST['bookname'];
 	
-	$my_db= mysqli_connect("localhost" , "root" , "");
-	
-	//echo $book_barcode;
-	
-	mysqli_select_db($my_db, "bookerp");
-	
-	mysqli_query($my_db,"SET NAMES 'utf8'");
+	include('mysql.php');
 	
 	$sql = "SELECT nno FROM pdstock where PD_No = '$book_barcode' ";
 	

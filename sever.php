@@ -6,11 +6,7 @@
 	//從前端接收的資料
 	$code=$_REQUEST["code"];
 	//連DB
-	$my_db= mysqli_connect("localhost" , "root" , "");
-	
-	mysqli_select_db($my_db, "bookerp");
-	
-	mysqli_query($my_db,"SET NAMES 'utf8'");
+	include("mysql.php");
 	//搜尋條件
 	$sql = "SELECT * FROM student where code = '$code' ";
 	//判斷有沒輸入

@@ -3,11 +3,7 @@
 	
 	$nno = $_REQUEST['notenno'];
 	 
-    $my_db= mysqli_connect("localhost" , "root" , "");
-	
-	mysqli_select_db($my_db, "bookerp");
-	
-	mysqli_query($my_db,"SET NAMES 'utf8'");
+	include('mysql.php');
 	
 	$sql = "SELECT note.nno , note.course, note.note , pdstock.PD_No ,  pdstock.ST_Qty ,  pdstock.ST_mi , pdstock.ST_Place  FROM pdstock INNER JOIN note ON pdstock.nno=note.nno WHERE note.nno = '$nno'";
 			

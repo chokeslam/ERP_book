@@ -10,11 +10,7 @@
 	
 	$relendbook = $_REQUEST['lendbook'];
 	
-	$my_db= mysqli_connect("localhost" , "root" , "");
-	
-	mysqli_select_db($my_db, "bookerp");
-	
-	mysqli_query($my_db,"SET NAMES 'utf8'");
+	include('mysql.php');
 	
 	$sql = "SELECT name , course , take   FROM student where code = '$lendstudentnno'";
 	
@@ -74,7 +70,7 @@
 		
 		update_lendstock($lendnno,$relendbook);
 		
-		echo json_encode(array('msg' => '成功'));
+		echo json_encode(array('msg' => '轉換成功'));
 		
 		return;
 			
@@ -96,7 +92,7 @@
 		
 		update_lendstock($lendnno,$relendbook);
 		
-		echo json_encode(array('msg' => '成功了喔'));
+		echo json_encode(array('msg' => '轉換成功'));
 		
 		return;
 		
@@ -156,11 +152,7 @@
 			
 				$coursename = $course[$j];
 				
-				$my_db= mysqli_connect("localhost" , "root" , "");
-	
-				mysqli_select_db($my_db, "bookerp");
-	
-				mysqli_query($my_db,"SET NAMES 'utf8'");
+				include('mysql.php');
 			
 				$sql = "SELECT course , note FROM note where course = '$coursename' AND note = '$name '";
 			
@@ -192,11 +184,7 @@
 	
 	function update_lendstock($lendnno,$relendbook){
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");
-	
-		mysqli_select_db($my_db, "bookerp");
-	
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = "SELECT adv_no , student_name , book_name  FROM lendstock where adv_no = '$lendnno'";
 		

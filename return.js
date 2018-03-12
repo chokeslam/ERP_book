@@ -48,7 +48,7 @@
 						$("#book").val("");
 						var take = data.book.split(";");
 						$("#searchtake").html(
-         		 			"已領過以下書籍br /><br />"
+         		 			"已領過以下書籍<br /><br />"
           			 	);
           				  $.each(take,function(index,value){
 						

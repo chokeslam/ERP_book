@@ -9,11 +9,7 @@
 	//print_r($student);
 	
 	//搜尋庫存TABLE
-	$my_db= mysqli_connect("localhost" , "root" , "");
-	
-	mysqli_select_db($my_db, "bookerp");
-	
-	mysqli_query($my_db,"SET NAMES 'utf8'");
+	include('mysql.php');
 	
 	$sql = "SELECT nno , PD_No , ST_Qty FROM pdstock where PD_No = '$PD_No' ";
 	
@@ -192,7 +188,7 @@
 		
 		$rw = $rw['taketime'];
 		
-		echo json_encode(array('msg' => '可以領！' , 'book' => "$rw" ));
+		echo json_encode(array('msg' => '領取成功！' , 'book' => "$rw" ));
 				
 				return 0;
 				
@@ -216,7 +212,7 @@
 		
 		$rw = $rw['taketime'];
 		
-		echo json_encode(array('msg' => '沒領過 可以領！' , 'book' => "$rw" ));
+		echo json_encode(array('msg' => '領取成功！' , 'book' => "$rw" ));
 				
 	// 判斷條件 #2 為  $string1(分割後的字串  ' 微積分秋 ')  及 $newstring  (重組後字串 ' 微積分秋@程中 ') 是否有出現在  $student['take']( 拿過的書的字串內 ) 
 	// 及  $note['note'] ( 書籍名稱 ' 微積分秋@程中@講義@01 ') 不在陣列 $take 中      如都符合 就為同老師 的書
@@ -234,7 +230,7 @@
 		
 		$rw = $rw['taketime'];
 		
-		echo json_encode(array('msg' => '同樣老師的課 可以領！' , 'book' => "$rw" ));
+		echo json_encode(array('msg' => '領取成功！' , 'book' => "$rw" ));
 	
 	//判斷 同科目多個老師的條件下不可領書的條件
 		
@@ -289,11 +285,7 @@
 	//扣庫存 function     
 	function Buckle_stock ($data1 , $data2){					//$data1 = $ST_Qty (庫存數量)  $data2 = $PD_No  (書籍編號)
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = "UPDATE pdstock set ST_Qty = '$data1' where PD_No = '$data2'";
 		
@@ -309,11 +301,7 @@
 	//取得流水號 function
 	function Form_number (){
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = "SELECT MAX(IO_Blno) FROM iostock";
 		
@@ -351,11 +339,7 @@
 		
 		$QT_Qty = 1;
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = " INSERT INTO iostock VALUES 
 				 (null , '$formnumber' , '$data2' , 'null' , '$data1' , null , '$QT_Qty' , '$date' , CURRENT_TIMESTAMP)";
@@ -376,11 +360,7 @@
 		
 		$newtakebook = $data1 . "_" . $datetime . ";";
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql= "SELECT take FROM student where code = '$data2' ";
 		
@@ -403,11 +383,7 @@
 	//重新載入function 
 	function reload($data){
 		
-	$my_db= mysqli_connect("localhost" , "root" , "");
-	
-	mysqli_select_db($my_db, "bookerp");
-	
-	mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 	//搜尋條件
 	$sql = "SELECT * FROM student where code = '$data' ";	
 	

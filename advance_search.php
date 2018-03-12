@@ -5,11 +5,7 @@
 	$PD_No=$_REQUEST['book'];
 	$rebook = $_REQUEST['rebook'];
 	
-	$my_db= mysqli_connect("localhost" , "root" , "");
-	
-	mysqli_select_db($my_db, "bookerp");
-	
-	mysqli_query($my_db,"SET NAMES 'utf8'");
+	include('mysql.php');
 	
 	$sql = "SELECT nno , PD_No , ST_Qty FROM pdstock where PD_No = '$PD_No' ";
 	
