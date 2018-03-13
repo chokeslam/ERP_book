@@ -94,7 +94,7 @@
 	include('mysql.php');
 	
 	$sql = "INSERT INTO pdstock VALUES 
-				 (null , '$notenno' , '$PD_No' , '$ST_Qty' , '$ST_Place' , null , '$PR_Cdate' , CURRENT_TIMESTAMP)";
+				 (null , '$notenno' , '$PD_No' , '$ST_Qty' , '$ST_mi' , '$ST_Place' , null , '$PR_Cdate' , CURRENT_TIMESTAMP)";
 	
 	$result= mysqli_query($my_db, $sql);
 		

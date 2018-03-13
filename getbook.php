@@ -356,7 +356,7 @@
 	
 	function take_book ($data1 , $data2) {				//$data1 = $takebook (此次領取的書籍資料)  $data2 =  $ST_Code (學生編號) 
 			
-		$datetime = date ("Y/m/d H:i:s" , mktime(date('H')+8, date('i'), date('s'), date('m'), date('d'), date('Y'))) ; 
+		$datetime = date ("Y/m/d H:i:s" , mktime(date('H'), date('i'), date('s'), date('m'), date('d'), date('Y'))) ; 
 		
 		$newtakebook = $data1 . "_" . $datetime . ";";
 		
