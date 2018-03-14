@@ -87,16 +87,25 @@
 		
 		$rs = mysqli_fetch_row($result);
 		
-		$rs = $rs[0];	
+		$rs = explode(';',substr($rs[0],0,-1));	
 		
-		//echo $rs;
+		$bookarray = array();
+
+		foreach ($rs as $key => $value) {
+
+			$value=substr($value,0,strpos($value,"_"));
+
+			array_push($bookarray,$value);
+		}
 		
-		$bookdocument = substr($rs,strpos($rs ,$data1),strpos($rs ,";")+1);
-		
-		$rs=str_replace($bookdocument, "", $rs);
-		
-		//echo $bookdocument;
-		
+		$key = array_search($data1,$bookarray);
+
+		unset($rs[$key]);
+		//print_r($rs);
+		$rs = implode($rs, ';');
+
+		$rs .=";"; 
+		//print_r($rs);
 		$sql = "UPDATE student set take = '$rs' where code = '$data2'";
 		
 		$result= mysqli_query($my_db, $sql);			
