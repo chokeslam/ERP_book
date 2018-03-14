@@ -9,11 +9,7 @@
 	//print_r($student);
 	//echo $ST_Code;
 	//搜尋庫存TABLE
-	$my_db= mysqli_connect("localhost" , "root" , "");
-	
-	mysqli_select_db($my_db, "bookerp");
-	
-	mysqli_query($my_db,"SET NAMES 'utf8'");
+	include('mysql.php');
 	
 	$sql = "SELECT nno , PD_No , ST_Qty FROM pdstock where PD_No = '$PD_No' ";
 	
@@ -83,11 +79,7 @@
 	//更改學生 已領取書籍functuon
 	function return_book($data1,$data2){
 			
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql= "SELECT take FROM student where code = '$data2' ";
 		
@@ -121,11 +113,7 @@
 		
 		$IN_Qty = 1;
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = " INSERT INTO iostock VALUES 
 				 (null , '$formnumber' , '$data2' , null , '$data1' , '$IN_Qty' , null , '$date' , CURRENT_TIMESTAMP)";
@@ -140,11 +128,7 @@
 	//取得流水號 function
 	function Form_number (){
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = "SELECT MAX(IO_Blno) FROM iostock";
 		
@@ -176,11 +160,7 @@
 	//加庫存 function     
 	function Buckle_stock ($data1 , $data2){					//$data1 = $ST_Qty (庫存數量)  $data2 = $PD_No  (書籍編號)
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");	
-		
-		mysqli_select_db($my_db, "bookerp");
-		
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		
 		$sql = "UPDATE pdstock set ST_Qty = '$data1' where PD_No = '$data2'";
 		
@@ -194,11 +174,7 @@
 	//重新載入function   	
 	function reload($data){
 		
-		$my_db= mysqli_connect("localhost" , "root" , "");
-	
-		mysqli_select_db($my_db, "bookerp");
-	
-		mysqli_query($my_db,"SET NAMES 'utf8'");
+		include('mysql.php');
 		//搜尋條件
 		$sql = "SELECT * FROM student where code = '$data' ";	
 	
