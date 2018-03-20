@@ -1,4 +1,4 @@
-<?php
+<?php 
     header('Content-Type: application/json; charset=UTF-8');
 	
 	$notenno = $_REQUEST["notenno"];
@@ -10,23 +10,12 @@
 	$ST_mi = $_REQUEST["miqty"];
 	
 	$ST_Place = $_REQUEST["place"];
-			
+
+	$Admin = $_REQUEST["admin"];
+
 	$PR_Cdate= date("Y-m-d",mktime(0,0,0,date("m"),date("d"),date("Y")));
-	
-	if (!isset($_REQUEST['notenno']) || empty($_REQUEST['notenno'])) {
-		
-        echo json_encode(array('msg' => '沒有輸入書籍號碼！'));
 
-        return;
-    }	
 
-	if (!isset($_REQUEST['pdno']) || empty($_REQUEST['pdno'])) {
-		
-        echo json_encode(array('msg' => '沒有輸入條碼編號！'));
-
-        return;
-    }
-		
 	if (!isset($_REQUEST['qty']) || empty($_REQUEST['qty'])) {
 		
         echo json_encode(array('msg' => '沒有輸入數量！'));
@@ -36,68 +25,38 @@
 
 	if (!isset($_REQUEST['miqty']) || empty($_REQUEST['miqty'])) {
 		
-        echo json_encode(array('msg' => '沒有輸入最低庫存數量！'));
+        echo json_encode(array('msg' => '沒有輸入最低數量！'));
 
         return;
     }
 
-	if (!isset($_REQUEST['place']) || empty($_REQUEST['place'])) {
+	if (!isset($_REQUEST['admin']) || empty($_REQUEST['admin'])) {
 		
-        echo json_encode(array('msg' => '沒有輸入庫存地！'));
+        echo json_encode(array('msg' => '沒有輸入辦理人姓名！'));
 
         return;
     }
 
-	if(!preg_match("/^[0-9]{9}$/", $PD_No)){
-		
-	    echo json_encode(array('msg' => '條碼編號 請輸入9碼數字！'));
+    include('mysql.php');
 
-        return;		
-		
+    $sql = "SELECT * FROM pdstock WHERE PD_No = '$PD_No' AND ST_Place = '$ST_Place'";
+
+	$result= mysqli_query($my_db, $sql);
+
+	$rs = mysqli_num_rows($result);
+
+	if($rs > 0 ){
+
+		echo json_encode(array('msg' => '已有庫存資料請查詢庫存資料表'));
+
+		return;
 	}
-	
-	include('mysql.php');
-	
-	$sql = "SELECT nno , PD_No FROM pdstock where nno = '$notenno'";
-	
-	$result= mysqli_query($my_db, $sql);
-	
-	$rs= mysqli_fetch_assoc($result);
-	
-		
-	if (isset($rs) || !empty($rs)) {
-		
-		$str = "書籍 No.".$notenno." 已有庫存資料 請至書籍庫存查詢";
-		
-		echo json_encode(array('msg' => $str));
-        
 
-        return;
-    }
-		
-	$sql = "SELECT nno , PD_No FROM pdstock where PD_No = '$PD_No'";
-	
-	$result= mysqli_query($my_db, $sql);
-	
-	$rs= mysqli_fetch_assoc($result);
-	
-	if (isset($rs) || !empty($rs)) {
-		
-		$str = "條碼編號 ".$PD_No." 已重複 請至書籍庫存查詢";
-		
-		echo json_encode(array('msg' => $str));
-        
-
-        return;
-    }
-							
-	include('mysql.php');
-	
 	$sql = "INSERT INTO pdstock VALUES 
-				 (null , '$notenno' , '$PD_No' , '$ST_Qty' , '$ST_mi' , '$ST_Place' , null , '$PR_Cdate' , CURRENT_TIMESTAMP)";
-	
-	$result= mysqli_query($my_db, $sql);
-		
-	
-	echo json_encode("新增成功");
-?>
+				 (null , '$notenno' , '$PD_No' , '$ST_Qty' , '$ST_mi' , '$ST_Place' , '$Admin' , null , '$PR_Cdate' , CURRENT_TIMESTAMP)";
+
+    $result= mysqli_query($my_db, $sql);
+
+    echo json_encode("新增成功");
+
+ ?>

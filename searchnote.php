@@ -1,11 +1,11 @@
 <?php
-    header('Content-Type: application/json; charset=UTF-8');
+    //header('Content-Type: application/json; charset=UTF-8');
 	
 	$notenno = $_REQUEST['notenno'];
 	
 	include('mysql.php');
 	
-	$sql = "SELECT nno , course , note ,PD_No FROM waywin_tp.note LEFT JOIN bookERP.pdstock USING(nno) where nno = '$notenno' ";
+	$sql = "SELECT nno , course , note ,PD_No FROM waywin_tp.note LEFT JOIN bookERP.notecode USING(nno) where nno = '$notenno' ";
 	
 	$result= mysqli_query($my_db, $sql);
 	
@@ -22,7 +22,14 @@
         echo json_encode(array('msg' => '沒有這本書的資料！'));
 
         return;
-    }		
+    }
+
+	if (!isset($note['PD_No']) || empty($note['PD_No'])) {
+		
+        echo json_encode(array('msg' => '沒有這本書的條碼！'));
+
+        return;
+    }
 	
 	echo json_encode($note);
 ?>

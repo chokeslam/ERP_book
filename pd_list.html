@@ -43,19 +43,24 @@
 			<br />
 			<br />
 				<div class="col-2"></div>
-				<div class="col-5" style="text-align: center;">
+				<div class="col-4" style="text-align: center;">
 					<p class="h1">書籍庫存</p>
 				</div>
-				<div class="col-2" style="padding-right: 0;padding-top: 7px; text-align: right">
+				<div class="col-3" style="padding-right: 0;padding-top: 7px; text-align: right">
 					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addmodal" style="font-size: 18px;">
 
-          新增
+          新增條碼
+
+        </button>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addmodal2" style="font-size: 18px;">
+
+          新增庫存
 
         </button>
 
          <button type="button" class="btn btn-primary" id="lowbtn" style="font-size: 18px; margin-right: 15px;">
 
-            低於最低庫存書籍
+            庫存短缺書籍
         
          </button>
 				
@@ -76,6 +81,7 @@
                       <th>最低庫存數量</th>
                 			<th>庫存地</th>        
                 			<th>加入時間</th>
+                      <th>最後修改時間</th>
                 			<th style="padding-left: 10px;padding-right: 10px">修改</th>
                 			
             			</tr>
@@ -89,6 +95,7 @@
                       <th>最低庫存數量</th>
                 			<th>庫存地</th>        
                 			<th>加入時間</th>
+                      <th>最後修改時間</th>
                 			<th>修改</th>
                 			
             			</tr>
@@ -176,9 +183,56 @@
   			</div>
 		
 		</div>
+
+<!--  -->
+    <div class="modal fade" id="addmodal2" tabindex="-1" role="dialog" aria-labelledby="addmodalLabel" aria-hidden="true">
+        
+        <div class="modal-dialog" role="document">
+          
+          <div class="modal-content">
+              
+              <div class="modal-header">
+              
+                <h5 class="modal-title text-primary font-weight-bold" id="addmodalLabel" >請輸入書籍No</h5>
+              
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                
+                    <span aria-hidden="true">&times;</span>
+              
+                </button>
+              
+              </div>
+              <div class="modal-body row">
+                
+                <label for="notenno" class="col-sm-3 col-form-label ">書籍No :</label>
+        
+              <div class=" col-sm-7" style="padding: 0">
+          
+                  <input type="text" class="form-control" id="notenno1">
+                    
+              </div>
+
+              <div class="col-sm-2" style="text-align: right">
+              
+                <button type="button" class="btn btn-primary" id="searchnote1">確認</button>
+            
+              </div>
+                            
+              <div class="col-sm-3"></div>
+              
+              <div class="col-sm-7" id="msg4" style="padding-left: 0;color: red;"></div>  
+              
+              </div>
+    
+          </div>
+        
+        </div>
+    
+    </div>
+    <!--  -->
 		
 			
-		<div class="modal fade" id="createstock" tabindex="-1" role="dialog" aria-labelledby="addmodalLabel" aria-hidden="true">
+		<div class="modal fade" id="createcode" tabindex="-1" role="dialog" aria-labelledby="addmodalLabel" aria-hidden="true">
   			
   			<div class="modal-dialog" role="document">
     			
@@ -186,7 +240,7 @@
       			
       				<div class="modal-header">
         			
-        				<h5 class="modal-title text-primary font-weight-bold" id="addmodalLabel" >新增書籍庫存</h5>
+        				<h5 class="modal-title text-primary font-weight-bold" id="addmodalLabel" >新增書籍條碼</h5>
         			
         				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
           			
@@ -229,34 +283,14 @@
       						<input type="text" class="form-control" id="pdno" style="margin-top: 10px;">
     		  					
     					</div>
-    					
-      					<label for="qty" class="col-sm-3 col-form-label " style="margin-top: 10px;">書籍數量 :</label>
-    		
-    					<div class=" col-sm-9">
-      		
-      						<input type="text" class="form-control" id="qty" style="margin-top: 10px;">
-    		  					
-    					</div>
-
-                <label for="miqty" class="col-sm-3 col-form-label " style="margin-top: 10px;">最低庫存量 :</label>
+                <label for="admin" class="col-sm-3 col-form-label " style="margin-top: 10px;">辦理人 :</label>
         
               <div class=" col-sm-9">
           
-                  <input type="text" class="form-control" id="miqty" style="margin-top: 10px;">
+                  <input type="text" class="form-control" id="admin" style="margin-top: 10px;">
                     
-              </div> 
+              </div>
 
-      					<label for="place" class="col-sm-3 col-form-label " style="margin-top: 10px;">庫存地 :</label>
-    		
-    					<div class=" col-sm-9">
-      						
-      						<select id= "place" class="form-control" style="margin-top: 10px;">
-      							<!--<option selected>Choose...</option>-->
-        						<option value="台北">台北</option>
-        						
-      						</select>
-      						<!--<input type="text" class="form-control" id="place" style="margin-top: 10px;">-->		
-    					</div>
     					<div class="col-sm-3"></div>
     					<div class="col-sm-9" id="msg2" style="color: red;"></div>
     					    					      					     					      					    					    								
@@ -274,7 +308,107 @@
   		
   			</div>
 		
-		</div>			
+		</div>
+
+			<!--  -->
+    <div class="modal fade" id="createstock" tabindex="-1" role="dialog" aria-labelledby="addmodalLabel" aria-hidden="true">
+        
+        <div class="modal-dialog" role="document">
+          
+          <div class="modal-content">
+            
+              <div class="modal-header">
+              
+                <h5 class="modal-title text-primary font-weight-bold" id="addmodalLabel" >新增書籍庫存</h5>
+              
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                
+                    <span aria-hidden="true">&times;</span>
+            
+                </button>
+              
+              </div>
+            
+              <div class="modal-body row">
+                
+                <label for="nnonote1" class="col-sm-3 col-form-label ">書籍No:</label>
+        
+              <div class=" col-sm-9">
+          
+                  <input type="text" class="form-control" id="nnonote1" readonly="readonly">
+                    
+              </div>
+              
+                <label for="bookname2" class="col-sm-3 col-form-label " style="margin-top: 10px;">書籍名稱 :</label>
+        
+              <div class=" col-sm-9">
+          
+                  <input type="text" class="form-control" id="bookname2" readonly="readonly" style="margin-top: 10px;">
+                    
+              </div>
+              
+                <label for="pdno1" class="col-sm-3 col-form-label " style="margin-top: 10px;">條碼編號 :</label>
+        
+              <div class=" col-sm-9">
+          
+                  <input type="text" class="form-control" id="pdno1" readonly="readonly" style="margin-top: 10px;">
+                    
+              </div>
+                <label for="qty" class="col-sm-3 col-form-label " style="margin-top: 10px;">書籍數量 :</label>
+        
+              <div class=" col-sm-9">
+          
+                  <input type="text" class="form-control" id="qty" style="margin-top: 10px;">
+                    
+              </div>
+
+                <label for="miqty" class="col-sm-3 col-form-label " style="margin-top: 10px;">最低庫存量 :</label>
+        
+              <div class=" col-sm-9">
+          
+                  <input type="text" class="form-control" id="miqty" style="margin-top: 10px;">
+                    
+              </div> 
+
+                <label for="place" class="col-sm-3 col-form-label " style="margin-top: 10px;">庫存地 :</label>
+        
+              <div class=" col-sm-9">
+                  
+                  <select id= "place" class="form-control" style="margin-top: 10px;">
+                    <!--<option selected>Choose...</option>-->
+                    <option value="台北">台北</option>
+                    <option value="中壢">中壢</option>
+                    
+                  </select>
+                  <!--<input type="text" class="form-control" id="place" style="margin-top: 10px;">-->    
+              </div>
+                <label for="admin1" class="col-sm-3 col-form-label " style="margin-top: 10px;">辦理人 :</label>
+        
+              <div class=" col-sm-9">
+          
+                  <input type="text" class="form-control" id="admin1" style="margin-top: 10px;">
+                    
+              </div>
+
+              <div class="col-sm-3"></div>
+              <div class="col-sm-9" id="msg5" style="color: red;"></div>
+                                                                                                            
+              </div>
+            
+              <div class="modal-footer">
+          
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+          
+                <button type="button" class="btn btn-primary" id="ok2">送出</button>
+          
+              </div>
+                
+          </div>
+      
+        </div>
+    
+    </div>  
+      <!--  -->
 		
 	<script>
 

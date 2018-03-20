@@ -3,7 +3,7 @@
 	
     include('mysql.php');
 	
-	$sql = "SELECT pdstock.nno , pdstock.PD_No , note.note , pdstock.ST_Qty , pdstock.ST_mi , pdstock.ST_Place , pdstock.PR_Cdate FROM pdstock INNER JOIN note ON pdstock.nno=note.nno ";
+	$sql = "SELECT nno ,PD_No , note , ST_Qty , ST_mi , ST_Place , PR_Cdate ,PR_Update FROM waywin_tp.note LEFT JOIN bookERP.pdstock USING(nno) where pdstock.nno=note.nno";
 			
 	$result = mysqli_query ($my_db, $sql);
 	

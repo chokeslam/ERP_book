@@ -29,10 +29,37 @@ $(document).ready(function() {
         	$modal_dialog.css({'margin-top': Math.max(0, ($(window).height() - $modal_dialog.height()) / 2) });
           
    	 	});
+		$("#addmodal2").on('show.bs.modal', function(){
+ 			
+    		var $this = $(this);
+          
+        	var $modal_dialog = $this.find('.modal-dialog');
+           
+        	$this.css('display', 'block');
+          
+        	$modal_dialog.css({'margin-top': Math.max(0, ($(window).height() - $modal_dialog.height()) / 2) });
+          
+   	 	});
+		$("#createcode").on('show.bs.modal', function(){
+ 			
+    		var $this = $(this);
+          
+        	var $modal_dialog = $this.find('.modal-dialog');
+           
+        	$this.css('display', 'block');
+          
+        	$modal_dialog.css({'margin-top': Math.max(0, ($(window).height() - $modal_dialog.height()) / 2) });
+          
+   	 	});
    	 	
    	 	$("#searchnote").on('click',function(){
 					
 			notenno_request ();
+				
+		});
+		$("#searchnote1").on('click',function(){
+					
+			notenno_request1 ();
 				
 		});
 
@@ -45,8 +72,22 @@ $(document).ready(function() {
     	}   
   	
   		});
+		$("#notenno1").keypress(function(){
+  		
+  		if (event.which === 13){
+			
+			$("#searchnote1").click();
+
+    	}   
+  	
+  		});
 		
 		$("#ok1").on('click',function(){
+					
+			createbookcode_request ();
+				
+		});
+		$("#ok2").on('click',function(){
 					
 			createstock_request ();
 				
@@ -127,6 +168,8 @@ $(document).ready(function() {
       	 		
       	 			{ "data": "PR_Cdate" },
 
+      	 			{ "data": "PR_Update" },
+
                		{                
                   	  "className":'click',
                   
@@ -171,7 +214,7 @@ $(document).ready(function() {
                 			//$(this).css('color' , 'red');
                 			$(this).children().eq(3).addClass("bg-danger text-white");
 
-                			$("#lowqty").append("<li>"+$(this).children().eq(2).text()+"</li><br />");
+                			$("#lowqty").append("<li>"+$(this).children().eq(2).text()+'('+$(this).children().eq(5).text()+")</li><br />");
                 			
                 		}
                 	
@@ -187,7 +230,7 @@ $(document).ready(function() {
   		$("#lowbtn").on('click' ,function(){
 
   			$("#table").removeClass("col-12");
-  			$(".col-5").removeClass("col-8");
+  			$(".col-4").removeClass("col-7");
   			$("#tttt").show();
 
 
@@ -199,7 +242,7 @@ $(document).ready(function() {
 
 			$("#tttt").hide();
 			$("#table").addClass("col-12");
-			$(".col-5").addClass("col-8");
+			$(".col-4").addClass("col-7");
 
 		});
 			
@@ -239,18 +282,32 @@ $(document).ready(function() {
     		 		
     		$("h5").text("修改書籍庫存");
     		
-    		$("#place").replaceWith('<input type="text" class="form-control" id="place" style="margin-top: 10px;">');
+    		$("#place").replaceWith('<input type="text" readonly="readonly" class="form-control" id="place" style="margin-top: 10px;">');
     		
-    		$("#ok1").attr('id','ok2');
-    		
-    		var nno =$(this).parents('tr').children("td").eq(0).text();
-    		
-    		searchpdstock_request (nno);
-    	
     		$("#ok2").unbind( );
+
+    		$("#ok2").attr('id','ok3');
+
+    		$("#msg5").unbind( );
+
+    		$("#msg5").attr('id','msg6');
     		
-    		$("#ok2").on('click',function(){
+    		$("#nnonote1").val($(this).parents('tr').children("td").eq(0).text());
+
+     		$("#bookname2").val($(this).parents('tr').children("td").eq(2).text());
 					
+			 $("#pdno1").val($(this).parents('tr').children("td").eq(1).text());
+
+			 $("#qty").val($(this).parents('tr').children("td").eq(3).text());
+
+			 $("#miqty").val($(this).parents('tr').children("td").eq(4).text());
+					
+			 $("#place").val($(this).parents('tr').children("td").eq(5).text());	
+    	
+    		
+    		
+    		$("#ok3").on('click',function(){
+
 				updatestock_request ();
 				
 			});
@@ -279,11 +336,11 @@ $(document).ready(function() {
 						
 				data:{
 					
-					notenno : $("#nnonote").val(),
-					pdno : $("#pdno").val(),
+					pdno : $("#pdno1").val(),
 					qty : $("#qty").val(),
 					miqty : $("#miqty").val(),
-					place : $("#place").val()
+					place : $("#place").val(),
+					admin : $("#admin1").val()
 							
 				} ,
 						
@@ -300,7 +357,7 @@ $(document).ready(function() {
 						
 					}else{
 						
-						$("#msg2").text(data.msg);
+						$("#msg6").text(data.msg);
 					}
 									
 				} ,
@@ -311,47 +368,7 @@ $(document).ready(function() {
 			});
 		};    
     	
-    	
-    	function searchpdstock_request (nno){
-					
-			$.ajax({
-				type: "POST" ,
-						
-				url: "searchpdstock.php" ,
-						
-				data:{
-					
-					notenno : nno,
-										
-				} ,
-						
-				datatype: "json" ,
-						
-				success: function(data) {
-					
-					$("#nnonote").val(data.nno);
-						
-					$("#course").val(data.course);
-						
-					$("#bookname1").val(data.note);
-					
-					$("#pdno").val(data.PD_No);
-					
-					$("#qty").val(data.ST_Qty);
-
-					$("#miqty").val(data.ST_mi);
-					
-					$("#place").val(data.ST_Place);						
-									
-				} ,
-        		error: function(jqXHR) {
-            				
-					alert("發生錯誤: " + jqXHR.status);
-       	 		}
-			});
-		};    	
-    	
-    	
+//
     	function createstock_request (){
 					
 			$.ajax({
@@ -361,11 +378,51 @@ $(document).ready(function() {
 						
 				data:{
 					
-					notenno : $("#nnonote").val(),
-					pdno : $("#pdno").val(),
+					notenno : $("#nnonote1").val(),
+					pdno : $("#pdno1").val(),
 					qty : $("#qty").val(),
 					miqty : $("#miqty").val(),
-					place : $("#place").val()
+					place : $("#place").val(),
+					admin : $("#admin1").val()
+							
+				} ,
+						
+				datatype: "json" ,
+						
+				success: function(data) {
+					
+					
+					
+					if (typeof data.msg == "undefined"){
+						
+						alert(data);
+						window.location.href = "pd_list.html";
+						
+					}else{
+						
+						$("#msg5").text(data.msg);
+					}
+									
+				} ,
+        		error: function(jqXHR) {
+            				
+					alert("發生錯誤: " + jqXHR.status);
+       	 		}
+			});
+		}; 
+    	// 
+    	function createbookcode_request (){
+					
+			$.ajax({
+				type: "POST" ,
+						
+				url: "createbookcode.php" ,
+						
+				data:{
+					
+					notenno : $("#nnonote").val(),
+					pdno : $("#pdno").val(),
+					admin : $("#admin").val()
 							
 				} ,
 						
@@ -391,7 +448,7 @@ $(document).ready(function() {
 					alert("發生錯誤: " + jqXHR.status);
        	 		}
 			});
-		};    	
+		};
     	
     	
     	function notenno_request (){
@@ -413,17 +470,57 @@ $(document).ready(function() {
 					
 					if (typeof data.msg == "undefined"){
 							
-						$("#createstock").modal();
+						$("#createcode").modal();
 						
 						$("#nnonote").val(data.nno);
 						
 						$("#course").val(data.course);
 						
 						$("#bookname1").val(data.note);
-								
 					}else{
 							
 						$("#msg3").text(data.msg);
+						
+						$("#notenno").val("");	
+					}
+									
+				} ,
+        		error: function(jqXHR) {
+            				
+					alert("發生錯誤: " + jqXHR.status);
+       	 		}
+			});
+		};
+
+    	function notenno_request1 (){
+					
+			$.ajax({
+				type: "POST" ,
+						
+				url: "searchnote.php" ,
+						
+				data:{
+					
+					notenno:$("#notenno1").val(),
+							
+				} ,
+						
+				datatype: "json" ,
+						
+				success: function(data) {
+					
+					if (typeof data.msg == "undefined"){
+							
+						$("#createstock").modal();
+
+						$("#nnonote1").val(data.nno);
+						
+						$("#bookname2").val(data.note);
+						
+						$("#pdno1").val(data.PD_No);
+					}else{
+							
+						$("#msg4").text(data.msg);
 						
 						$("#notenno").val("");	
 					}
