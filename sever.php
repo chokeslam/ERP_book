@@ -200,6 +200,7 @@
 			
 			return;
 		}
+		$student_nno = $rs['nno'];
 
 		$sql = "SELECT * FROM takebook where student_nno = '$student_nno' ";
 
