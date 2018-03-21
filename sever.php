@@ -201,18 +201,6 @@
 			return;
 		}
 
-		$student_code = $rs['code'];
-
-		$student_name = $rs['name'];
-
-		$student_nno = $rs['nno'];
-
-		$student_course = $rs['course'];
-
-		$student_classify = $rs['classify'];
-
-		$student_classname = $rs['class_name'];
-
 		$sql = "SELECT * FROM takebook where student_nno = '$student_nno' ";
 
 		$result = mysqli_query($my_db,$sql);
@@ -222,7 +210,6 @@
 		$takebook = explode(';',$rw['takebook']);
 
 		array_pop($takebook);
-
 		//print_r($takebook);
 		$taketime = array();
 		foreach ($takebook as $key => $value) {
@@ -258,6 +245,7 @@
 
 		// 	  ];
 		$rs['taketime'] = $taketime;
+		$_SESSION['student'] = $rs;
 		echo json_encode($rs);
 
 		
