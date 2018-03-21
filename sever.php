@@ -8,7 +8,7 @@
 	//連DB
 	include("mysql.php");
 	//搜尋條件
-	$sql = "SELECT * FROM student where code = '$code' ";
+	$sql = "SELECT * FROM waywin_tp.student where code = '$code' ";
 	//判斷有沒輸入
 	if (!isset($_REQUEST["code"]) || empty($_REQUEST["code"])) {
 		
@@ -16,9 +16,7 @@
 
         return;
     }
-	
 
-	
 	$result= mysqli_query ($my_db, $sql);
 	//將搜尋後學生資料放入  $rs
 	$rs = mysqli_fetch_assoc ($result);
@@ -93,7 +91,6 @@
 			return;
 					
 		}
-
 		
 		
 		
@@ -203,39 +200,103 @@
 			
 			return;
 		}
-	
-		$takebook=$rs['take']; 		
-		$takebook=explode(";", $takebook);
+
+		$student_code = $rs['code'];
+
+		$student_name = $rs['name'];
+
+		$student_nno = $rs['nno'];
+
+		$student_course = $rs['course'];
+
+		$student_classify = $rs['classify'];
+
+		$student_classname = $rs['class_name'];
+
+		$sql = "SELECT * FROM takebook where student_nno = '$student_nno' ";
+
+		$result = mysqli_query($my_db,$sql);
+
+		$rw = mysqli_fetch_assoc($result);
+
+		$takebook = explode(';',$rw['takebook']);
 
 		array_pop($takebook);
-		$take_time = $takebook;
-		//print_r($take_time);
-		//$take_time['0']= strchr($takebook['0'],"_",1) .strchr($takebook['0'],"2");
-		//echo $take_time['0'];
-		//print_r(strchr($takebook['0'],"_",1));
-		//print_r(strchr($takebook['0'],"2"));
-		$num=count($takebook);
-		
-		for ($i=0; $i < $num ; $i++) { 
-			$take_time[$i] = strchr($take_time[$i],"_",1) .strrchr($take_time[$i],"_");
-		}
-		$take_time = implode(";", $take_time);
-		$take_time =str_replace("_", " ", $take_time);
-		//print_r($take_time);
-				
+
 		//print_r($takebook);
-		//echo $takebook[0];
-		
-		for ($i=0; $i < $num ; $i++) { 
-			$takebook[$i] = substr($takebook[$i] , 0 , strpos($takebook[$i], "_"));
+		$taketime = array();
+		foreach ($takebook as $key => $value) {
+			$taketime[$key] = strchr($takebook[$key],"_");
+			$takebook[$key] = strchr($takebook[$key],"_",1);
+			
 		}
-		$takebook = implode(";", $takebook);
-		$rs['take'] = $takebook;
-		$rs['taketime'] = $take_time;
-		//echo $rs["course"];
-		$_SESSION['student'] = $rs;		
-		//print_r($rs);
-		echo json_encode($rs);	
+		// print_r($takebook);
+		// print_r($taketime);
+		foreach ($takebook as $key => $value) {
+			$sql = "SELECT note FROM waywin_tp.note WHERE nno = '$value'";
+			$result = mysqli_query($my_db,$sql);
+			$rw = mysqli_fetch_assoc($result);
+			$takebook[$key] = $rw['note'];
+		}
+		foreach ($takebook as $key => $value) {
+			$taketime[$key] = $takebook[$key].$taketime[$key];
+		}
+		// print_r($takebook);
+
+		// print_r($taketime);
+
+		$taketime = implode(";",$taketime);
+
+		$taketime =str_replace("_", " ", $taketime);
+		// $rs = [
+		// 		'code'=>$student_code,
+		// 		'name'=>$student_name , 
+		// 		'classify'=>$student_classify,
+		// 		'class_name'=>$student_classname,
+		// 		'course'=>$student_course,
+		// 		'taketime'=>$taketime,
+
+		// 	  ];
+		$rs['taketime'] = $taketime;
+		echo json_encode($rs);
+
+		
+		
+		// print_r($rs);
+		// print_r($taketime);
+		// ------------------------------------------------------------------------------
+		// $takebook=$rs['take']; 
+		// $takebook=explode(";", $takebook);
+
+		// array_pop($takebook);
+		// $take_time = $takebook;
+		// //print_r($take_time);
+		// //$take_time['0']= strchr($takebook['0'],"_",1) .strchr($takebook['0'],"2");
+		// //echo $take_time['0'];
+		// //print_r(strchr($takebook['0'],"_",1));
+		// //print_r(strchr($takebook['0'],"2"));
+		// $num=count($takebook);
+		
+		// for ($i=0; $i < $num ; $i++) { 
+		// 	$take_time[$i] = strchr($take_time[$i],"_",1) .strrchr($take_time[$i],"_");
+		// }
+		// $take_time = implode(";", $take_time);
+		// $take_time =str_replace("_", " ", $take_time);
+		// //print_r($take_time);
+				
+		// //print_r($takebook);
+		// //echo $takebook[0];
+		
+		// for ($i=0; $i < $num ; $i++) { 
+		// 	$takebook[$i] = substr($takebook[$i] , 0 , strpos($takebook[$i], "_"));
+		// }
+		// $takebook = implode(";", $takebook);
+		// $rs['take'] = $takebook;
+		// $rs['taketime'] = $take_time;
+		// //echo $rs["course"];
+		// //$_SESSION['student'] = $rs;		
+		// //print_r($rs);
+		// echo json_encode($rs);
 		 
 	}else{
 		//沒搜尋到資料
