@@ -21,26 +21,39 @@
 	//搜尋書籍TABLE
 	$booknno = $pdstock["nno"];   //書籍nno編號
 	
+	$studentnno = $student['nno'];
+
 	$ST_Qty = $pdstock["ST_Qty"] + 1;  //庫存數量
 	
 	//print_r($pdstock);
-	
-	$sql = "SELECT nno , course , note FROM note where nno = '$booknno' ";
+	$sql = "SELECT nno , course , note FROM waywin_tp.note where nno = '$booknno' ";
 	
 	$result= mysqli_query($my_db, $sql);
 	
-	$note = mysqli_fetch_assoc($result); //書籍資料
-	
-	
-	//搜尋結束
-	//print_r($note);
-	$takebook = $note['note']."_". $note['course'];    //刪除用字串
-	//echo $takebook;
-	//分割 $student['take'] 欄位字串
-	$take = explode(";", $student['take']);		////學生已領過的書籍  將   ' ; ' 拿掉後  放入陣列  $take中
-	//print_r($take);
-	
-	// 判斷有無輸入書籍編號
+	$note = mysqli_fetch_assoc($result);
+
+	$sql = "SELECT * FROM takebook WHERE student_nno = '$studentnno'";
+
+	$result= mysqli_query($my_db, $sql);
+
+	$rs = mysqli_fetch_assoc($result);
+
+	//print_r($rs);
+
+	$take = explode(';',$rs['takebook']);
+
+	$taketime = array();
+
+	array_pop($take);
+
+	foreach ($take as $key => $value) {
+
+		$taketime[$key] = strchr($take[$key],'_');
+
+		$take[$key] = strchr($take[$key],'_',-1);
+		
+	}
+
 	if (!isset($_REQUEST["book"]) || empty($_REQUEST["book"])) {
 		
         echo json_encode(array('msg' => '沒有輸入書籍編號！'));
@@ -56,59 +69,49 @@
     }	
 	
 	
-	if (in_array($note['note'], $take) == FALSE){
+	if (in_array($booknno, $take) == FALSE){
 		
 		echo json_encode(array('msg' => '沒借過這本書！'));
 				
 		return 0;
 	}
 
-	return_book($note['note'],$ST_Code);
-	
-	Transaction_IN($ST_Code,$PD_No) ;
-	
+	$key = array_search($booknno,$take);
+
+	$str = $take[$key].$taketime[$key];
+
+	$returnarray = explode(';',$rs['takebook']);
+
+	array_pop($returnarray);
+
+	//print_r($returnarray);
+
+	$key = array_search($str,$returnarray);
+
+	unset($returnarray[$key]);
+
+	//print_r($returnarray);
+
+
+	//echo $str;
 	Buckle_stock ($ST_Qty,$PD_No);
-	
-	$rw = reload($ST_Code);				
-		
-	$rw = $rw['taketime'];
-	
+	Transaction_IN($ST_Code,$PD_No) ;
+	return_book($returnarray,$studentnno);
+	$rw = reload($studentnno);
 	echo json_encode(array('msg' => '退書成功！' , 'book' => "$rw" ));
+
 //------------------------------------------------------fuction--------------------------------------------------------------//	
 	
 	//更改學生 已領取書籍functuon
-	function return_book($data1,$data2){
-			
+	function return_book($returnarray,$studentnno){
+
 		include('mysql.php');
-		
-		$sql= "SELECT take FROM student where code = '$data2' ";
-		
+
+		$str = implode(";",$returnarray).';';
+
+		$sql = "UPDATE takebook SET takebook = '$str' WHERE student_nno = '$studentnno'";
+
 		$result= mysqli_query($my_db, $sql);
-		
-		$rs = mysqli_fetch_row($result);
-		
-		$rs = explode(';',substr($rs[0],0,-1));	
-		
-		$bookarray = array();
-
-		foreach ($rs as $key => $value) {
-
-			$value=substr($value,0,strpos($value,"_"));
-
-			array_push($bookarray,$value);
-		}
-		
-		$key = array_search($data1,$bookarray);
-
-		unset($rs[$key]);
-		//print_r($rs);
-		$rs = implode($rs, ';');
-
-		$rs .=";"; 
-		//print_r($rs);
-		$sql = "UPDATE student set take = '$rs' where code = '$data2'";
-		
-		$result= mysqli_query($my_db, $sql);			
 	}
 	
 //---------------------------------------------------------------------------------------------------------------------------
@@ -181,40 +184,53 @@
 //---------------------------------------------------------------------------------------------------------------------------
 	
 	//重新載入function   	
-	function reload($data){
+	function reload($studentnno){
 		
 		include('mysql.php');
 		//搜尋條件
-		$sql = "SELECT * FROM student where code = '$data' ";	
-	
-		$result= mysqli_query($my_db, $sql);
-		//將搜尋後學生資料放入  $rs
-		$rs = mysqli_fetch_assoc($result);
-	
-	
-	
-		$takebook=$rs['take']; 
-		$takebook=explode(";", $takebook);
+
+		$sql = "SELECT * FROM takebook where student_nno = '$studentnno' ";
+
+		$result = mysqli_query($my_db,$sql);
+
+		$rw = mysqli_fetch_assoc($result);
+
+		$takebook = explode(';',$rw['takebook']);
+
 		array_pop($takebook);
-		$take_time = $takebook;
-		$num=count($takebook);
-	
-		for ($i=0; $i < $num ; $i++) { 
-			$take_time[$i] = strchr($take_time[$i],"_",1) .strrchr($take_time[$i],"_");
+
+		$taketime = array();
+
+		foreach ($takebook as $key => $value) {
+
+			$taketime[$key] = strchr($takebook[$key],"_");
+
+			$takebook[$key] = strchr($takebook[$key],"_",1);
+			
 		}
-		$take_time = implode(";", $take_time);
-		$take_time =str_replace("_", " ", $take_time);	
-				
-		
-		for ($i=0; $i < $num ; $i++) { 
-			$takebook[$i] = substr($takebook[$i] , 0 , strpos($takebook[$i], "_"));
+
+		foreach ($takebook as $key => $value) {
+
+			$sql = "SELECT note FROM waywin_tp.note WHERE nno = '$value'";
+
+			$result = mysqli_query($my_db,$sql);
+
+			$rw = mysqli_fetch_assoc($result);
+
+			$takebook[$key] = $rw['note'];
+
 		}
-			$takebook = implode(";", $takebook);
-			$rs['take'] = $takebook;
-			$rs['taketime'] = $take_time;
-			$_SESSION['student'] = $rs;	
-		
-			return $rs;
-		}	
+
+		foreach ($takebook as $key => $value) {
+
+			$taketime[$key] = $takebook[$key].$taketime[$key];
+		}
+
+		$taketime = implode(";",$taketime);
+
+		$taketime =str_replace("_", " ", $taketime);
+
+		return $taketime;
+	}	
 	
 ?>
