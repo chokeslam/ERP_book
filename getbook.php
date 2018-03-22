@@ -3,10 +3,10 @@
 	header('Content-Type: application/json; charset=UTF-8');
 	//學生資料由SESSION 傳入
     $student = $_SESSION['student'];
+
 	$PD_No=$_REQUEST["book"];
+
 	$ST_Code =  $student['code'];	
-	
-	//print_r($student);
 	
 	//搜尋庫存TABLE
 	include('mysql.php');
@@ -23,17 +23,15 @@
 	
 	$ST_Qty = $pdstock["ST_Qty"] - 1;  //庫存數量
 	
-	//print_r($pdstock);
-	
-	$sql = "SELECT nno , course , note FROM note where nno = '$booknno' ";
+	$sql = "SELECT nno , course , note FROM waywin_tp.note where nno = '$booknno' ";
 	
 	$result= mysqli_query($my_db, $sql);
 	
 	$note = mysqli_fetch_assoc($result);
-	
+
 	$coursename = $note['course'];
-	
-	$sql = "SELECT nno FROM teacher where course = '$coursename' ";
+
+	$sql = "SELECT nno FROM waywin_tp.teacher where course = '$coursename'";
 	
 	$result= mysqli_query($my_db, $sql);
 	
@@ -43,19 +41,15 @@
 	
 	$studentnno = $student['nno'];
 	
-	$sql = "SELECT * FROM member_1_permission where studb_nno = '$studentnno' AND course_nno = '$coursenno'";
+	$sql = "SELECT * FROM waywin_tp.member_1_permission where studb_nno = '$studentnno' AND course_nno = '$coursenno'";
 	
 	$result= mysqli_query($my_db, $sql);
 	
 	$courseloa = mysqli_fetch_assoc($result);
 	
-	//print_r($courseloa);
-	
 	$date = date("Y-m-d",mktime(0,0,0,date("m"),date("d"),date("Y")));
 	
 	$date = decrease10years($date);
-
-	//print_r($courseloa['halt_date_period']);
 
 	if(empty($courseloa['halt_date_period']) == FALSE){
 		
@@ -108,18 +102,47 @@
 		
 		return ;
 		
-	}				
-	//搜尋結束
-	//print_r($note);
-	$takebook = $note['note']."_". $note['course'];    //領取時 寫入已領取表格用的 書籍格式
-	//echo $takebook;
-	
-	
+	}
+
+	$sql = "SELECT * FROM takebook WHERE student_nno = '$studentnno'";
+
+	$result = mysqli_query($my_db,$sql);
+
+	$rs = mysqli_fetch_assoc($result);
+
+	// print_r($rs);
+
+	$take = explode(';',$rs['takebook']);
+
+	$taketime = array();
+
+	array_pop($take);
+
+	foreach ($take as $key => $value) {
+
+		$taketime[$key] = strchr($take[$key],'_');
+
+		$take[$key] = strchr($take[$key],'_',-1);
+		
+	}
+
+	$takename = array();
+
+	foreach ($take as $key => $value) {
+
+		$sql = "SELECT note FROM waywin_tp.note WHERE nno = '$value'";
+
+		$result = mysqli_query($my_db,$sql);
+
+		$rw = mysqli_fetch_assoc($result);
+
+		$takename[$key] = $rw['note'];
+
+	}
+	$takename = implode(';',$takename);
+
 	//分割 $student['course'] 欄位字串
 	$course = explode(";", $student['course']);  //學生報名的科目 將   ' ; ' 拿掉後  放入陣列  $course中
-	//分割 $student['take'] 欄位字串
-	$take = explode(";", $student['take']);		////學生已領過的書籍  將   ' ; ' 拿掉後  放入陣列  $take中
-
 
 	//分割並重組 比對課程老師字串   以  微積分秋@程中@講義@01 為例
 	
@@ -130,10 +153,6 @@
 	$string3 = strchr($string2, "@" ,1);    //   切割後 為   " 程中  "
 
 	$newstring = $string1 . "@" .$string3;  //  重組後為  " 微積分秋@程中   "
-
-	
-	//print_r($take);
-
 	// 判斷有無輸入書籍編號
 	if (!isset($_REQUEST["book"]) || empty($_REQUEST["book"])) {
 		
@@ -158,126 +177,88 @@
 		
 		return 0;
 	}
-	
-	//用  @ 判斷這個科目是否有多個老師
-	if (strchr($note['note'] , "@") == FALSE){
-		
-		//判斷單一老師的條件下  是否有領過書
-		
-		//將 $note['note'] ( 書籍名稱 ' 微積分秋@程中@講義@01 ') 放入陣列$take 中搜尋 
-		
-		
-		if (in_array($note['note'], $take)){
-				
-			$time = strchr(strchr($student['taketime'], $note['note']),";" , 1);
-			$time = substr(strchr($time," "),1);
+
+	if (in_array($note['nno'], $take)){
 			
-			echo json_encode(array('msg' =>$note['note'] . '<br />'.'這本書已在 ' . $time . " 領過"));
-			
-				return 0;	
-				
-			}else{
-				
-					Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
-		
-					Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
-			
-					take_book ($takebook,$ST_Code);		//執行寫入已領取書籍functuon
-				
-		$rw = reload($ST_Code);				
-		
-		$rw = $rw['taketime'];
-		
-		echo json_encode(array('msg' => '領取成功！' , 'book' => "$rw" ));
-				
-				return 0;
-				
-			}
-		
+		$time = $taketime[array_search($note['nno'], $take)];
+
+		$time = substr($time,1);
+
+		echo json_encode(array('msg' =>$note['note'] . '<br />'.'這本書已在 ' . $time . " 領過"));
+
+		return 0;
 	}
-	
-	//判斷 同科目多個老師的條件下可以領書的條件
-	
-	//判斷條件  #1 為   $string1(分割後的字串  ' 微積分秋 ') 是否有出現在  $student['take']( 拿過的書的字串內 ) 如沒有 出現 就為 未借過的書
-	if (strchr($student['take'], $string1) == FALSE){
-					
-		
-		Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
-		
-		Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
-		
-		take_book ($takebook,$ST_Code);		//執行寫入已領取書籍functuon
-		
-		$rw = reload($ST_Code);				
-		
-		$rw = $rw['taketime'];
-		
-		echo json_encode(array('msg' => '領取成功！' , 'book' => "$rw" ));
-				
-	// 判斷條件 #2 為  $string1(分割後的字串  ' 微積分秋 ')  及 $newstring  (重組後字串 ' 微積分秋@程中 ') 是否有出現在  $student['take']( 拿過的書的字串內 ) 
-	// 及  $note['note'] ( 書籍名稱 ' 微積分秋@程中@講義@01 ') 不在陣列 $take 中      如都符合 就為同老師 的書
-	
-	}else if (strchr($student['take'], $string1) == TRUE && strchr($student['take'],$newstring) == TRUE && in_array($note['note'], $take)==FALSE){
-		
-		
-		Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
-		
-		Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
-		
-		take_book ($takebook,$ST_Code);		//執行寫入已領取書籍functuon
-		
-		$rw = reload($ST_Code);				
-		
-		$rw = $rw['taketime'];
-		
-		echo json_encode(array('msg' => '領取成功！' , 'book' => "$rw" ));
-	
-	//判斷 同科目多個老師的條件下不可領書的條件
-		
-	}else{
-		
-		//判斷條件  #1  為  將 $note['note'] ( 書籍名稱 ' 微積分秋@程中@講義@01 ') 放入陣列$take 中搜尋 
-		//如有比對到 則不可借
-		if (in_array($note['note'], $take)){
+
+	if (strchr($note['note'] , "@")){
+
+		if (strchr($takename, $string1) && !strchr($takename,$newstring)){
+
+			$takename = explode(";",$takename);
+
+			$string=null;
 			
-			$time = strchr(strchr($student['taketime'], $note['note']),";" , 1);
-			
-			$time = substr(strchr($time," "),1);
-			
-			echo json_encode(array('msg' =>$note['note'] . '<br />'.'這本書已在 ' . $time . " 領過"));
-				
-		
-		//判斷條件 #2 為  $string1(分割後的字串  ' 微積分秋 ') 有出現在  $student['take']( 拿過的書的字串內 ) 且
-						// $newstring  (重組後字串 ' 微積分秋@程中 ') 沒有出現在  $student['take']( 拿過的書的字串內 ) 則不能借
-			
-		}else if (strchr($student['take'], $string1) == TRUE && strchr($student['take'],$newstring) == FALSE) {
-			
-			$abb=null;
-			
-			foreach ($take as $key => $value) {
+			foreach ($takename as $key => $value) {
 				if (strchr($value, $string1) == TRUE){
-					$abb=$abb. $value;
+					$string=$string. $value;
 				}
 			}
-	
-			$string1 =  strchr($abb, "@" ,1);       //  切割後 為  " 微積分秋  "
-	
-			$string2 = substr(strchr($abb, "@") , 1);   // 切割後 為   " 程中@講義@01  "
-	
-			$string3 = strchr($string2, "@" ,1);    //   切割後 為   " 程中  "
 
-			$abb = $string1 . "@" .$string3;  //  重組後為  " 微積分秋@程中   " 
-				
-			
-			echo json_encode(array('msg' =>'已領過    "'.$string3.'"    老師的書！'));
-			
+			$string = substr(strchr($string, "@") , 1);
+
+			$string = strchr($string, "@" ,1);
+
+			 echo json_encode(array('msg' =>'已領過    "'.$string.'"    老師的書！'));
+
+			 return 0;
+
 		}
+		//$string1(分割後的字串  ' 微積分秋 ') 是否有出現在  $takename( 拿過的書的字串內 ) 如沒有 出現 就為 未借過的書
+		if (!strchr($takename, $string1)){
+
+			Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
 			
+			Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
+				
+			take_book ($note['nno'],$studentnno);		//執行寫入已領取書籍functuon
+				
+			$rw = reload($studentnno);
+
+			echo json_encode(array('msg' => '吳領過的多老師科目領取成功！' , 'book' => "$rw" ));
+
+			return 0;
+
+		}
+		//$string1(分割後的字串  ' 微積分秋 ')  及 $newstring  (重組後字串 ' 微積分秋@程中 ') 是否有出現在  $student['take']( 拿過的書的字串內 )
+		//如都符合 就為同老師 的書
+		if (strchr($takename, $string1) && strchr($takename,$newstring)){
+
+			Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
+			
+			Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
+				
+			take_book ($note['nno'],$studentnno);		//執行寫入已領取書籍functuon
+				
+			$rw = reload($studentnno);
+
+			echo json_encode(array('msg' => '同老師領取成功！' , 'book' => "$rw" ));
+
+			return 0;
+
+
+		}
+
 	}
-	
-	
-	
-	
+		
+		Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
+		
+		Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
+			
+		take_book ($note['nno'],$studentnno);		//執行寫入已領取書籍functuon
+			
+		$rw = reload($studentnno);
+
+		echo json_encode(array('msg' => '無領過領取成功！' , 'book' => "$rw" ));
+
 	
 //-----------------------------------------------------function--------------------------------------------------------------//
 	
@@ -350,19 +331,21 @@
 	}
 	
 
-//--------------------------------------------------------------------------------------------------------------------------	
+// //--------------------------------------------------------------------------------------------------------------------------	
 	
 	// 寫入學生 已領取書籍functuon
-	
+
 	function take_book ($data1 , $data2) {				//$data1 = $takebook (此次領取的書籍資料)  $data2 =  $ST_Code (學生編號) 
-			
-		$datetime = date ("Y/m/d H:i:s" , mktime(date('H'), date('i'), date('s'), date('m'), date('d'), date('Y'))) ; 
+		
+		date_default_timezone_set('Asia/Taipei');
+
+		$datetime = date("Y/m/d H:i:s");
 		
 		$newtakebook = $data1 . "_" . $datetime . ";";
 		
 		include('mysql.php');
 		
-		$sql= "SELECT take FROM student where code = '$data2' ";
+		$sql= "SELECT takebook FROM takebook where student_nno = '$data2' ";
 		
 		$result= mysqli_query($my_db, $sql);
 		
@@ -372,49 +355,63 @@
 		
 		$newtakebook = $rs . $newtakebook;
 		
-		$sql = "UPDATE student set take = '$newtakebook' where code = '$data2'";
+		$sql = "UPDATE takebook set takebook = '$newtakebook' where student_nno = '$data2'";
 		
 		$result= mysqli_query($my_db, $sql);
 		
 	}
 
-//--------------------------------------------------------------------------------------------------------------------------
+// //--------------------------------------------------------------------------------------------------------------------------
 	
 	//重新載入function 
-	function reload($data){
+	function reload($studentnno){
 		
-		include('mysql.php');
+	include('mysql.php');
 	//搜尋條件
-	$sql = "SELECT * FROM student where code = '$data' ";	
-	
-	$result= mysqli_query($my_db, $sql);
-	//將搜尋後學生資料放入  $rs
-	$rs = mysqli_fetch_assoc($result);
-	
-	
-	
-	$takebook=$rs['take']; 
-	$takebook=explode(";", $takebook);
+
+	$sql = "SELECT * FROM takebook where student_nno = '$studentnno' ";
+
+	$result = mysqli_query($my_db,$sql);
+
+	$rw = mysqli_fetch_assoc($result);
+
+	$takebook = explode(';',$rw['takebook']);
+
 	array_pop($takebook);
-	$take_time = $takebook;
-	$num=count($takebook);
-	
-	for ($i=0; $i < $num ; $i++) { 
-		$take_time[$i] = strchr($take_time[$i],"_",1) .strrchr($take_time[$i],"_");
-	}
-	$take_time = implode(";", $take_time);
-	$take_time =str_replace("_", " ", $take_time);	
-				
+
+	$taketime = array();
+
+	foreach ($takebook as $key => $value) {
+
+		$taketime[$key] = strchr($takebook[$key],"_");
+
+		$takebook[$key] = strchr($takebook[$key],"_",1);
 		
-	for ($i=0; $i < $num ; $i++) { 
-		$takebook[$i] = substr($takebook[$i] , 0 , strpos($takebook[$i], "_"));
 	}
-		$takebook = implode(";", $takebook);
-		$rs['take'] = $takebook;
-		$rs['taketime'] = $take_time;
-		$_SESSION['student'] = $rs;	
-		
-		return $rs;
+
+	foreach ($takebook as $key => $value) {
+
+		$sql = "SELECT note FROM waywin_tp.note WHERE nno = '$value'";
+
+		$result = mysqli_query($my_db,$sql);
+
+		$rw = mysqli_fetch_assoc($result);
+
+		$takebook[$key] = $rw['note'];
+
+	}
+
+	foreach ($takebook as $key => $value) {
+
+		$taketime[$key] = $takebook[$key].$taketime[$key];
+	}
+
+	$taketime = implode(";",$taketime);
+
+	$taketime =str_replace("_", " ", $taketime);
+
+	return $taketime;
+
 	}
 	
 //----------------------------------------------------------------------------------------------------------------------
@@ -439,7 +436,4 @@
 	return date_format($date,"Y-m-d");
 	
 	}
-	/*	$student['take'] = $student['take'].";".$note['note'];
-	$_SESSION['student'] = $student;
-	print_r($_SESSION['student']);*/
 ?>
