@@ -141,7 +141,7 @@ table : iostock
 		<td>23</td>
 		<td>456</td>
 		<td>789</td>
-		<td>10</td>
+		<td>10,11</td>
 	</tr>
 	<tr>
 		<td>意義</td>
