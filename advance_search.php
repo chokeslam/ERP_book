@@ -19,7 +19,7 @@
 	//搜尋書籍TABLE
 	$booknno = $pdstock["nno"];   //書籍編號
 		
-	$sql = "SELECT nno , course , note FROM note where nno = '$booknno' ";
+	$sql = "SELECT nno , course , note FROM watwin_tp.note where nno = '$booknno' ";
 	
 	$result= mysqli_query($my_db, $sql);
 	

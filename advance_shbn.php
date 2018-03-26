@@ -16,7 +16,7 @@
 	
 	$rs = $rs['nno'];
 	
-	$sql = "SELECT note FROM note where nno = '$rs' ";
+	$sql = "SELECT note FROM waywin_tp.note where nno = '$rs' ";
 	
 	$result= mysqli_query($my_db, $sql);
 	
