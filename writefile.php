@@ -82,6 +82,8 @@
 
 		$getbook = implode(";",$bookarray).';';
 
+		//print_r($getbook);
+
 		$PD_Noarray = getPD_No($bookarray);
 
 		Transaction_IN($lendnno,$PD_Noarray);
@@ -96,7 +98,7 @@
 
 		echo json_encode(array('msg' => '轉換成功'));
 
-
+		return;
 
 	}
 
