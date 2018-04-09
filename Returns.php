@@ -55,6 +55,13 @@
 		
 	}
 
+	if (!isset($_REQUEST['place']) || empty($_REQUEST['place'])) {
+		
+        echo json_encode(array('msg' => '沒有選擇班別！'));
+
+        return;
+    }
+
 	if (!isset($_REQUEST["book"]) || empty($_REQUEST["book"])) {
 		
         echo json_encode(array('msg' => '沒有輸入書籍編號！'));
