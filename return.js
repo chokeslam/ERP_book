@@ -35,7 +35,8 @@
 						
 					data:{
 							
-					book:$("#book").val()
+					book:$("#book").val(),
+					place:$("#place").val()
 							
 				} ,
 						

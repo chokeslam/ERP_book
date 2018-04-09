@@ -6,12 +6,13 @@
 	$student = $_SESSION['student']; 
 	$PD_No=$_REQUEST["book"];         	//書籍條碼編號
 	$ST_Code =  $student['code'];		//學生條碼
+	$ST_Place = $_REQUEST['place'];
 	//print_r($student);
 	//echo $ST_Code;
 	//搜尋庫存TABLE
 	include('mysql.php');
 	
-	$sql = "SELECT nno , PD_No , ST_Qty FROM pdstock where PD_No = '$PD_No' ";
+	$sql = "SELECT nno , PD_No , ST_Qty FROM pdstock where PD_No = '$PD_No' AND ST_Place = '$ST_Place'";
 	
 	$result= mysqli_query($my_db, $sql);
 	
@@ -94,7 +95,7 @@
 
 
 	//echo $str;
-	Buckle_stock ($ST_Qty,$PD_No);
+	Buckle_stock ($ST_Qty,$PD_No,$ST_Place);
 	Transaction_IN($ST_Code,$PD_No) ;
 	return_book($returnarray,$studentnno);
 	$rw = reload($studentnno);
@@ -170,11 +171,11 @@
 	
 	
 	//加庫存 function     
-	function Buckle_stock ($data1 , $data2){					//$data1 = $ST_Qty (庫存數量)  $data2 = $PD_No  (書籍編號)
+	function Buckle_stock ($ST_Qty,$PD_No,$ST_Place){					//$data1 = $ST_Qty (庫存數量)  $data2 = $PD_No  (書籍編號)
 		
 		include('mysql.php');
 		
-		$sql = "UPDATE pdstock set ST_Qty = '$data1' where PD_No = '$data2'";
+		$sql = "UPDATE pdstock set ST_Qty = '$ST_Qty' where PD_No = '$PD_No' AND ST_Place = '$ST_Place'";
 		
 		$result= mysqli_query($my_db, $sql);
 		
