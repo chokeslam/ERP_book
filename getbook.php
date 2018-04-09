@@ -6,12 +6,14 @@
 
 	$PD_No=$_REQUEST["book"];
 
-	$ST_Code =  $student['code'];	
+	$ST_Code =  $student['code'];
+
+	$ST_Place = $_REQUEST['place'];
 	
 	//搜尋庫存TABLE
 	include('mysql.php');
 	
-	$sql = "SELECT nno , PD_No , ST_Qty FROM pdstock where PD_No = '$PD_No' ";
+	$sql = "SELECT nno , PD_No , ST_Qty FROM pdstock where PD_No = '$PD_No' AND ST_Place = '$ST_Place' ";
 	
 	$result= mysqli_query($my_db, $sql);
 	
@@ -153,6 +155,13 @@
 	$string3 = strchr($string2, "@" ,1);    //   切割後 為   " 程中  "
 
 	$newstring = $string1 . "@" .$string3;  //  重組後為  " 微積分秋@程中   "
+
+	if (!isset($_REQUEST["place"]) || empty($_REQUEST["place"])) {
+		
+        echo json_encode(array('msg' => '請選擇班別'));
+
+        return;
+    }
 	// 判斷有無輸入書籍編號
 	if (!isset($_REQUEST["book"]) || empty($_REQUEST["book"])) {
 		
@@ -215,7 +224,7 @@
 		//$string1(分割後的字串  ' 微積分秋 ') 是否有出現在  $takename( 拿過的書的字串內 ) 如沒有 出現 就為 未借過的書
 		if (!strchr($takename, $string1)){
 
-			Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
+			Buckle_stock ($ST_Qty,$PD_No,$ST_Place) ;		//執行扣庫存的 function 
 			
 			Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
 				
@@ -232,7 +241,7 @@
 		//如都符合 就為同老師 的書
 		if (strchr($takename, $string1) && strchr($takename,$newstring)){
 
-			Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
+			Buckle_stock ($ST_Qty,$PD_No,$ST_Place) ;		//執行扣庫存的 function 
 			
 			Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
 				
@@ -249,7 +258,7 @@
 
 	}
 		
-		Buckle_stock ($ST_Qty,$PD_No) ;		//執行扣庫存的 function 
+		Buckle_stock ($ST_Qty,$PD_No,$ST_Place) ;		//執行扣庫存的 function 
 		
 		Transaction_out($ST_Code,$PD_No) ;		//執行寫入異動表的 function 
 			
@@ -264,11 +273,11 @@
 	
 	
 	//扣庫存 function     
-	function Buckle_stock ($data1 , $data2){					//$data1 = $ST_Qty (庫存數量)  $data2 = $PD_No  (書籍編號)
+	function Buckle_stock ($ST_Qty,$PD_No,$ST_Place){					//$data1 = $ST_Qty (庫存數量)  $data2 = $PD_No  (書籍編號)
 		
 		include('mysql.php');
 		
-		$sql = "UPDATE pdstock set ST_Qty = '$data1' where PD_No = '$data2'";
+		$sql = "UPDATE pdstock set ST_Qty = '$ST_Qty' where PD_No = '$PD_No' AND ST_Place = '$ST_Place'";
 		
 		$result= mysqli_query($my_db, $sql);
 		

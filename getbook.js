@@ -20,8 +20,8 @@ $(document).ready(function() {
 						
 			data:{
 							
-			book:$("#book").val()
-							
+			book:$("#book").val(),
+			place:$("#place").val()
 		} ,
 						
 			datatype: "json" ,
