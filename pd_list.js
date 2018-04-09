@@ -51,6 +51,17 @@ $(document).ready(function() {
         	$modal_dialog.css({'margin-top': Math.max(0, ($(window).height() - $modal_dialog.height()) / 2) });
           
    	 	});
+		$("#createstock").on('show.bs.modal', function(){
+ 			
+    		var $this = $(this);
+          
+        	var $modal_dialog = $this.find('.modal-dialog');
+           
+        	$this.css('display', 'block');
+          
+        	$modal_dialog.css({'margin-top': Math.max(0, ($(window).height() - $modal_dialog.height()) / 2) });
+          
+   	 	});
    	 	
    	 	$("#searchnote").on('click',function(){
 					
@@ -98,8 +109,20 @@ $(document).ready(function() {
 		 window.location.reload();
 	
 		});
+
+		$("#createcode").on('hide.bs.modal', function(){
+		
+		 window.location.reload();
+	
+		});
 		
 		$("#addmodal").on('hide.bs.modal', function(){
+		
+		 window.location.reload();
+	
+		});
+
+		$("#addmodal2").on('hide.bs.modal', function(){
 		
 		 window.location.reload();
 	
