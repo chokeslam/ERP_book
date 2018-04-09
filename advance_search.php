@@ -19,7 +19,7 @@
 	//搜尋書籍TABLE
 	$booknno = $pdstock["nno"];   //書籍編號
 		
-	$sql = "SELECT nno , course , note FROM watwin_tp.note where nno = '$booknno' ";
+	$sql = "SELECT nno , course , note FROM waywin_tp.note where nno = '$booknno' ";
 	
 	$result= mysqli_query($my_db, $sql);
 	
@@ -49,21 +49,21 @@
 		
         echo json_encode(array('msg' => '沒有輸入書籍編號！'));
 
-        return;
+        return 0;
     }
     
     if (!isset($note) || empty($note)) {
 		
         echo json_encode(array('msg' => '書籍編號錯誤！'));
 
-        return;
+        return 0;
     }
     
     if (!in_array($note , $lendbook)){
     	
 		echo json_encode(array('msg' => '沒有借這本書！'));
 		
-		return;
+		return 0;
 		
     }
 	if (stristr("$rebook", "$note") == TRUE){

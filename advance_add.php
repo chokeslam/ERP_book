@@ -7,10 +7,14 @@
 	$studentname = $_REQUEST['studentname'];
 						
 	$salesname = $_REQUEST['salesname'];
+
+	$ST_Place = $_REQUEST['place'];
 						
 	$bookname = rtrim($_REQUEST['bookname']," ");
 	
 	$PD_No = rtrim($_REQUEST['pdno']," ");
+
+
 	
 	if (!isset($bookname) || empty($bookname)) {
 		
@@ -41,11 +45,11 @@
 	
 	$adv_no = advance_number();						//預領單號 取得
 		
-	Buckle_stock($PD_No,$num);					//執行扣庫存 function
+	Buckle_stock($PD_No,$num,$ST_Place);					//執行扣庫存 function
 
 	Transaction_out ($PD_No,$adv_no,$num);		//寫入異動紀錄表
 	
-	lendstock($adv_no,$schoolname,$studentname,$salesname,$bookname);		//寫入借出紀錄表
+	lendstock($adv_no,$schoolname,$studentname,$salesname,$bookname,$ST_Place);		//寫入借出紀錄表
 	
 	$msg = "借書成功";
 	
@@ -86,7 +90,7 @@
 	
 //--------------------------------------------------------------------------------------------------------------------------	
 	//扣庫存
-	function Buckle_stock($data_PDNo,$data_num){
+	function Buckle_stock($data_PDNo,$data_num,$ST_Place){
 					
 		include('mysql.php');
 		
@@ -95,7 +99,7 @@
 		//使用PD_NO(書籍編號)將各項書籍的數量抓出來放入陣列 $target
 		foreach ($data_PDNo as $key => $value) {
 						
-			$sql = "SELECT ST_Qty FROM pdstock where PD_NO ='$value'";
+			$sql = "SELECT ST_Qty FROM pdstock where PD_NO ='$value' AND ST_Place = '$ST_Place'";
 		
 			$result= mysqli_query ($my_db, $sql);
 		
@@ -120,7 +124,7 @@
 			
 			$stqty = $target[$i];
 			
-			$sql = "UPDATE pdstock set ST_Qty = '$stqty' where PD_No = '$pdno'";
+			$sql = "UPDATE pdstock set ST_Qty = '$stqty' where PD_No = '$pdno' AND ST_Place = '$ST_Place'";
 			
 			$result= mysqli_query ($my_db, $sql);
 			
@@ -219,7 +223,7 @@
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
 
-	function lendstock ($advno,$school_name,$student_name,$sales_name,$book_name) {
+	function lendstock ($advno,$school_name,$student_name,$sales_name,$book_name,$ST_Place) {
 		
 		$bookname = explode(" ", $book_name);
 		
@@ -232,7 +236,7 @@
 		include('mysql.php');
 		
 		$sql = "INSERT INTO lendstock VALUES
-				(null , '$advno' , '$school_name' , '$student_name' , '$sales_name' , '$bookname' , '$date' , null , CURRENT_TIMESTAMP)";
+				(null , '$advno' , '$school_name' , '$student_name' , '$sales_name' , '$bookname' , '$ST_Place' , '$date' , null , CURRENT_TIMESTAMP)";
 		
 		$result= mysqli_query ($my_db, $sql);
 	}

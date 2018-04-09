@@ -3,7 +3,7 @@
 
     include('mysql.php');
 	
-	$sql = "SELECT adv_no , school_name , student_name , sales_name , book_name , lend_date FROM lendstock ";
+	$sql = "SELECT adv_no , school_name , student_name , sales_name , book_name , lend_date , ST_Place FROM lendstock ";
 	
 	$result = mysqli_query ($my_db, $sql);
 	

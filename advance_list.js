@@ -32,6 +32,12 @@
 				
 				});
 			});
+
+      $("#exampleModal").on('hide.bs.modal', function(){
+    
+        window.location.reload();
+  
+      });
 					
 			//使用 datatable
 			var table =	$('#example').DataTable({
@@ -75,6 +81,8 @@
             	{ "data": "sales_name" },			//sales_name : 業務名稱
             						
             	{ "data": "lend_date" },			//lend_date : 借貨日期
+
+              { "data": "ST_Place" },
             						
             	
             	// 新增的欄位 1 : 下拉展開	內容為 借出的書名					
@@ -208,7 +216,7 @@
   			});	
 
 			//條碼輸入後 AJAX 到後端比對資料				
-			$('#bar').keypress(function(){
+			$('#inputbar').keypress(function(){
 			
   				if (event.which === 13){
   					
@@ -240,7 +248,7 @@
 				
 					adv_no:$("#inputno").val(),
 							
-					book:$("#bar").val(),
+					book:$("#inputbar").val(),
 					
 					rebook:$("#rebookname").text()
 							
@@ -252,7 +260,7 @@
 					
 						$("#alert").html(data.msg);
 						
-						$("#bar").val("");
+						$("#inputbar").val("");
 
 						var take = data.book.split(";");
 

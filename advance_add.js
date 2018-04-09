@@ -31,6 +31,17 @@
     				
     				return 0;
     				
+    			}else if($("#place").val()==""){
+
+    				alert("沒有選擇班別");
+    				
+    				return 0;
+    				
+    			}else if($("#bookname").text()==""){
+
+    				alert("請輸入正確書籍條碼取得書籍名稱");
+    				
+    				return 0;
     			}
     		}
     		function add_request (){
@@ -51,7 +62,9 @@
 						
 						bookname : $("#bookname").text(),
 						
-						pdno : $("#pdno").text()
+						pdno : $("#pdno").text(),
+
+						place : $("#place").val()
 							
 					} ,
 						

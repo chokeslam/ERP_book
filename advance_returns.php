@@ -41,18 +41,20 @@
 	
 	include('mysql.php');
 	
-	$sql = "SELECT book_name , end_date FROM lendstock WHERE adv_no = '$adv_no'";
+	$sql = "SELECT book_name , end_date ,ST_Place FROM lendstock WHERE adv_no = '$adv_no'";
 
 	$result= mysqli_query($my_db, $sql);
 			
 	$rs = mysqli_fetch_assoc($result);	
 	
 	$bookname = $rs['book_name'];
+
+	$ST_Place = $rs['ST_Place'];
 	
 	$bookname = substr($bookname, 0 , -1);
 	
 	Transaction_IN($adv_no , $rebook_PDNO ,$num);			//寫入異動表
-	Buckle_stock ($rebook_PDNO , $num);					//增加庫存
+	Buckle_stock ($rebook_PDNO , $num , $ST_Place);					//增加庫存
 	add_restock($adv_no,$rebookname,$admin);				//寫入還書紀錄
 	update_lendstock($rebookname,$bookname,$adv_no);		//更新借書紀錄
 	
@@ -187,7 +189,7 @@
 	
 	
 	//加庫存 function     
-	function Buckle_stock ($rebook_PDNO , $num){					//$data1 = $ST_Qty (庫存數量)  $data2 = $PD_No  (書籍編號)
+	function Buckle_stock ($rebook_PDNO , $num , $ST_Place){					//$data1 = $ST_Qty (庫存數量)  $data2 = $PD_No  (書籍編號)
 				
 		include('mysql.php');
 		
@@ -195,7 +197,7 @@
 			
 			$PD_No =  $rebook_PDNO[$i];
 			
-			$sql = "SELECT nno , PD_No , ST_Qty FROM pdstock where PD_No = '$PD_No' ";
+			$sql = "SELECT nno , PD_No , ST_Qty FROM pdstock where PD_No = '$PD_No' AND ST_Place = '$ST_Place'";
 			
 			$result= mysqli_query($my_db, $sql);
 			
@@ -203,7 +205,7 @@
 			
 			$ST_Qty = $pdstock["ST_Qty"] + 1;
 			
-			$sql = "UPDATE pdstock set ST_Qty = '$ST_Qty' where PD_No = '$PD_No'";
+			$sql = "UPDATE pdstock set ST_Qty = '$ST_Qty' where PD_No = '$PD_No' AND ST_Place = '$ST_Place'";
 			
 			$result= mysqli_query($my_db, $sql);
 						
