@@ -237,35 +237,7 @@ $(document).ready(function() {
     			{ "width": "10%", "targets": 7 }
     			
   			],
-  			 "initComplete": function(settings, json) {
-  			 	
-  			 	
-  			 		/* $('table tr').each(function () {
-  			 		 	$('td').eq(3).css('color','red');
-  			 		 });*/
-  			 		
-  			 // 		$('tbody tr').each(function () {
-  			 			
-						// var st_qty = parseInt($(this).children().eq(3).text());
-						
-						// var st_mi  = parseInt($(this).children().eq(4).text());
-                		
-      //           		if(st_mi > st_qty){
-                			
-      //           			//$(this).children().eq(3).css('color' , 'red');
-      //           			//$(this).css('color' , 'red');
-      //           			$(this).children().eq(3).addClass("bg-danger text-white");
 
-      //           			$("#lowqty").append("<li>"+$(this).children().eq(2).text()+'('+$(this).children().eq(5).text()+")</li><br />");
-                			
-      //           		}
-      //       });
-            
-  			 	
-  			 	
-    			
-  			
-  			},
   			  "createdRow": function( row, data, dataIndex ) {
 
   			  		var st_qty =Number($('td', row).eq(3).text());
