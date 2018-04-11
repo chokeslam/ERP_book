@@ -37,9 +37,26 @@
 	
 	include('mysql.php');
 
+	$sql = "SELECT PD_No FROM pdstock WHERE PD_No = '$PD_No'";
+
+	$result= mysqli_query($my_db, $sql);
+
+	$rs = mysqli_fetch_assoc($result);
+
+	if (!isset($rs) || empty($rs)) {
+		
+        $sql = "UPDATE soldbook_pdstock SET PD_No = '$PD_No' , ST_Qty = '$ST_Qty' , ST_mi = '$ST_mi' , ST_Place = '$ST_Place' , admin = '$Admin' , PR_Update = '$PR_Update' where PD_No = '$PD_No' AND ST_Place = '$ST_Place'";	
+
+        $result= mysqli_query($my_db, $sql);
+
+        echo json_encode("修改成功");
+
+        return;
+    }
+
 	$sql = "UPDATE pdstock SET PD_No = '$PD_No' , ST_Qty = '$ST_Qty' , ST_mi = '$ST_mi' , ST_Place = '$ST_Place' , admin = '$Admin' , PR_Update = '$PR_Update' where PD_No = '$PD_No' AND ST_Place = '$ST_Place'";	
 	
 	$result= mysqli_query($my_db, $sql);
-	
-	echo json_encode("成功");
+
+	echo json_encode("修改成功");
 ?>

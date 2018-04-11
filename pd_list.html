@@ -46,24 +46,40 @@
 				<div class="col-4" style="text-align: center;">
 					<p class="h1">書籍庫存</p>
 				</div>
-				<div class="col-3" style="padding-right: 0;padding-top: 7px; text-align: right">
-					<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addmodal" style="font-size: 18px;">
+				<div class="col-3 dropdown" style="padding-right: 0;padding-top: 7px; text-align: right">
 
-          新增條碼
+          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              新增
+          </button>
 
-        </button>
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addmodal2" style="font-size: 18px;">
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
-          新增庫存
+					  <button type="button" class="btn btn-primary btn-sm dropdown-item" data-toggle="modal" data-target="#addmodal">
 
-        </button>
+              新增條碼
 
-         <button type="button" class="btn btn-primary btn-sm" id="lowbtn" style="font-size: 18px; margin-right: 15px;">
+            </button>
+
+            <button type="button" class="btn btn-primary btn-sm dropdown-item" data-toggle="modal" data-target="#addmodal2">
+
+              新增庫存
+
+            </button>
+
+            <button type="button" class="btn btn-primary btn-sm dropdown-item" data-toggle="modal" data-target="#createsold">
+
+              新增販售書籍
+
+            </button>
+
+
+          </div>
+          <button type="button" class="btn btn-primary btn-sm " id="lowbtn" style="font-size: 18px; margin-right: 15px;">
 
             庫存短缺書籍
         
-         </button>
-				
+          </button>
+
 				</div>
 
 
@@ -405,6 +421,93 @@
                 
           </div>
       
+        </div>
+    
+    </div>
+
+    <div class="modal fade" id="createsold" tabindex="-1" role="dialog" aria-labelledby="addmodalLabel" aria-hidden="true">
+        
+        <div class="modal-dialog" role="document">
+          
+          <div class="modal-content">
+
+              <div class="modal-header">
+
+                <h5 class="modal-title text-primary font-weight-bold" id="addmodalLabel" >新增販售書籍</h5>
+
+              </div>
+              <div class="modal-body row">
+
+                <label for="soldbookname" class="col-sm-3 col-form-label " style="margin-top: 10px;">書籍名稱 :</label>
+          
+                <div class=" col-sm-9">
+            
+                    <input type="text" class="form-control" id="soldbookname" style="margin-top: 10px;">
+                      
+                </div>
+                
+                <label for="soldpdno" class="col-sm-3 col-form-label " style="margin-top: 10px;">條碼編號 :</label>
+          
+                <div class=" col-sm-9">
+            
+                    <input type="text" class="form-control" id="soldpdno" style="margin-top: 10px;">
+                      
+                </div>
+
+                <label for="soldqty" class="col-sm-3 col-form-label " style="margin-top: 10px;">書籍數量 :</label>
+          
+                <div class=" col-sm-9">
+            
+                    <input type="text" class="form-control" id="soldqty" style="margin-top: 10px;">
+                      
+                </div>
+
+                <label for="soldmiqty" class="col-sm-3 col-form-label " style="margin-top: 10px;">最低庫存量 :</label>
+          
+                <div class=" col-sm-9">
+            
+                    <input type="text" class="form-control" id="soldmiqty" style="margin-top: 10px;">
+                      
+                </div> 
+
+                <label for="soldplace" class="col-sm-3 col-form-label " style="margin-top: 10px;">庫存地 :</label>
+          
+                <div class=" col-sm-9">
+                    
+                    <select id= "soldplace" class="form-control" style="margin-top: 10px;">
+                      <!--<option selected>Choose...</option>-->
+                      <option value="台北">台北</option>
+                      <option value="中壢">中壢</option>
+                      
+                    </select>
+                    <!--<input type="text" class="form-control" id="place" style="margin-top: 10px;">-->    
+                </div>
+
+                <label for="soldadmin" class="col-sm-3 col-form-label " style="margin-top: 10px;">辦理人 :</label>
+          
+                <div class=" col-sm-9">
+            
+                    <input type="text" class="form-control" id="soldadmin" style="margin-top: 10px;">
+                      
+                </div>
+
+                <div class="col-sm-3"></div>
+                <div class="col-sm-9" id="soldmsg" style="color: red;"></div>
+                                                                                                              
+                </div>
+              
+                <div class="modal-footer">
+            
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            
+                  <button type="button" class="btn btn-primary" id="soldok">送出</button>
+            
+                </div>
+
+                </div>
+
+          </div>
+        
         </div>
     
     </div>
