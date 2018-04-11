@@ -62,6 +62,18 @@ $(document).ready(function() {
         	$modal_dialog.css({'margin-top': Math.max(0, ($(window).height() - $modal_dialog.height()) / 2) });
           
    	 	});
+
+		$("#createsold").on('show.bs.modal', function(){
+ 			
+    		var $this = $(this);
+          
+        	var $modal_dialog = $this.find('.modal-dialog');
+           
+        	$this.css('display', 'block');
+          
+        	$modal_dialog.css({'margin-top': Math.max(0, ($(window).height() - $modal_dialog.height()) / 2) });
+          
+   	 	});
    	 	
    	 	$("#searchnote").on('click',function(){
 					
@@ -101,6 +113,12 @@ $(document).ready(function() {
 		$("#ok2").on('click',function(){
 					
 			createstock_request ();
+				
+		});
+
+		$("#soldok").on('click',function(){
+					
+			create_sold ();
 				
 		});
 		
@@ -225,28 +243,38 @@ $(document).ready(function() {
   			 		/* $('table tr').each(function () {
   			 		 	$('td').eq(3).css('color','red');
   			 		 });*/
-  			 		$('tbody tr').each(function () {
+  			 		
+  			 // 		$('tbody tr').each(function () {
   			 			
-						var st_qty = parseInt($(this).children().eq(3).text());
+						// var st_qty = parseInt($(this).children().eq(3).text());
 						
-						var st_mi  = parseInt($(this).children().eq(4).text());
+						// var st_mi  = parseInt($(this).children().eq(4).text());
                 		
-                		if(st_mi > st_qty){
+      //           		if(st_mi > st_qty){
                 			
-                			//$(this).children().eq(3).css('color' , 'red');
-                			//$(this).css('color' , 'red');
-                			$(this).children().eq(3).addClass("bg-danger text-white");
+      //           			//$(this).children().eq(3).css('color' , 'red');
+      //           			//$(this).css('color' , 'red');
+      //           			$(this).children().eq(3).addClass("bg-danger text-white");
 
-                			$("#lowqty").append("<li>"+$(this).children().eq(2).text()+'('+$(this).children().eq(5).text()+")</li><br />");
+      //           			$("#lowqty").append("<li>"+$(this).children().eq(2).text()+'('+$(this).children().eq(5).text()+")</li><br />");
                 			
-                		}
-                	
-            		});
+      //           		}
+      //       });
+            
   			 	
   			 	
     			
   			
-  			}	
+  			},
+  			  "createdRow": function( row, data, dataIndex ) {
+
+  			  		var st_qty =Number($('td', row).eq(3).text());
+  			  		var st_mi  =Number($('td', row).eq(4).text());
+    				if ( st_qty < st_mi ) {
+      				$('td', row).eq(3).addClass("bg-danger text-white");
+      				$("#lowqty").append("<li>"+$('td', row).eq(2).text()+'('+$('td', row).eq(5).text()+")</li><br />");
+    }
+  }	
       	 			
   		});
 
@@ -548,6 +576,50 @@ $(document).ready(function() {
 						$("#notenno").val("");	
 					}
 									
+				} ,
+        		error: function(jqXHR) {
+            				
+					alert("發生錯誤: " + jqXHR.status);
+       	 		}
+			});
+		};
+
+    	function create_sold (){
+					
+			$.ajax({
+
+				type: "POST" ,
+						
+				url: "createsold.php" ,
+						
+				data:{
+					
+					note:$("#soldbookname").val(),
+
+					PD_No:$("#soldpdno").val(),
+
+					ST_Qty:$("#soldqty").val(),
+
+					ST_mi:$("#soldmiqty").val(),
+
+					ST_Place:$("#soldplace").val(),
+
+					admin:$("#soldadmin").val()
+							
+				} ,
+						
+				datatype: "json" ,
+						
+				success: function(data) {
+					if (typeof data.msg == "undefined"){
+						
+						alert(data);
+						window.location.href = "pd_list.html";
+						
+					}else{
+						
+						$("#soldmsg").text(data.msg);
+					}
 				} ,
         		error: function(jqXHR) {
             				
