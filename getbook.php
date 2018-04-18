@@ -359,6 +359,13 @@
 		$result= mysqli_query($my_db, $sql);
 		
 		$rs = mysqli_fetch_row($result);
+
+		if (!isset($rs) || empty($rs)) {
+
+			$sql = "INSERT INTO takebook VALUES('$data2','$newtakebook')";
+
+			$result= mysqli_query($my_db, $sql);
+		}
 		
 		$rs = $rs[0];
 		
