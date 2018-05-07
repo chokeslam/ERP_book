@@ -197,7 +197,9 @@ $(document).ready(function() {
 
             		{ "data": "nno"  },				
             						
-            		{ "data": "PD_No" },			
+            		{ "data": "PD_No" },
+
+            		{ "data": "course" },			
             						
             		{ "data": "note" },			           	
             						
@@ -208,6 +210,8 @@ $(document).ready(function() {
             		{ "data": "ST_Place" },			          						                  	
       	 		
       	 			{ "data": "PR_Cdate" },
+
+      	 			{ "data": "admin" },
 
       	 			{ "data": "PR_Update" },
 
@@ -227,24 +231,26 @@ $(document).ready(function() {
     			
     			{ className: "bbbb", "targets": [3] },
     			
-    			{ "width": "10%", "targets": 0 },
-    			{ "width": "10%", "targets": 1 },
-    			{ "width": "20%", "targets": 2 },
-    			{ "width": "10%", "targets": 3 },
-    			{ "width": "10%", "targets": 4 },
-    			{ "width": "10%", "targets": 5 },
-    			{ "width": "10%", "targets": 6 },
-    			{ "width": "10%", "targets": 7 }
+    			// { "width": "7%", "targets": 0 },
+    			// { "width": "10%", "targets": 1 },
+    			// { "width": "10%", "targets": 2 },
+    			// { "width": "20%", "targets": 3 },
+    			// { "width": "10%", "targets": 4 },
+    			// { "width": "10%", "targets": 5 },
+    			// { "width": "10%", "targets": 6 },
+    			// { "width": "10%", "targets": 7 },
+    			// { "width": "10%", "targets": 7 },
+    			// { "width": "10%", "targets": 7 },
     			
   			],
 
   			  "createdRow": function( row, data, dataIndex ) {
 
-  			  		var st_qty =Number($('td', row).eq(3).text());
-  			  		var st_mi  =Number($('td', row).eq(4).text());
+  			  		var st_qty =Number($('td', row).eq(4).text());
+  			  		var st_mi  =Number($('td', row).eq(5).text());
     				if ( st_qty < st_mi ) {
-      				$('td', row).eq(3).addClass("bg-danger text-white");
-      				$("#lowqty").append("<li>"+$('td', row).eq(2).text()+'('+$('td', row).eq(5).text()+")</li><br />");
+      				$('td', row).eq(4).addClass("bg-danger text-white");
+      				$("#lowqty").append("<li>"+$('td', row).eq(3).text()+'('+$('td', row).eq(6).text()+")</li><br />");
     }
   }	
       	 			
@@ -317,15 +323,15 @@ $(document).ready(function() {
     		
     		$("#nnonote1").val($(this).parents('tr').children("td").eq(0).text());
 
-     		$("#bookname2").val($(this).parents('tr').children("td").eq(2).text());
+     		$("#bookname2").val($(this).parents('tr').children("td").eq(3).text());
 					
 			 $("#pdno1").val($(this).parents('tr').children("td").eq(1).text());
 
-			 $("#qty").val($(this).parents('tr').children("td").eq(3).text());
+			 $("#qty").val($(this).parents('tr').children("td").eq(4).text());
 
-			 $("#miqty").val($(this).parents('tr').children("td").eq(4).text());
+			 $("#miqty").val($(this).parents('tr').children("td").eq(5).text());
 					
-			 $("#place").val($(this).parents('tr').children("td").eq(5).text());	
+			 $("#place").val($(this).parents('tr').children("td").eq(6).text());	
     	
     		
     		

@@ -22,7 +22,12 @@
         echo json_encode(array('msg' => '沒有這本書的資料！'));
 
         return;
-    }		
+    }
+    if ($note['PD_No'] !=Null) {
+
+    	echo json_encode(array('msg' => '這本書已有條碼資料！'));
+    	return;
+    }
 	
 	echo json_encode($note);
 ?>

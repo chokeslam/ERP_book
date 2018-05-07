@@ -232,7 +232,7 @@
 				
 			$rw = reload($studentnno);
 
-			echo json_encode(array('msg' => '吳領過的多老師科目領取成功！' , 'book' => "$rw" ));
+			echo json_encode(array('msg' => '無領過的多老師科目領取成功！' , 'book' => "$rw" ));
 
 			return 0;
 

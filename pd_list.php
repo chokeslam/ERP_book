@@ -3,7 +3,9 @@
 	
     include('mysql.php');
 	
-	$sql = "SELECT nno ,PD_No , note , ST_Qty , ST_mi , ST_Place , PR_Cdate ,PR_Update FROM soldbook_pdstock UNION ALL SELECT nno ,PD_No , note , ST_Qty , ST_mi , ST_Place , PR_Cdate ,PR_Update FROM waywin_tp.note LEFT JOIN bookERP.pdstock USING(nno) where pdstock.nno=note.nno";
+	//$sql = "SELECT nno ,PD_No , note , ST_Qty , ST_mi , ST_Place , PR_Cdate ,PR_Update FROM soldbook_pdstock UNION ALL SELECT nno ,PD_No , note , ST_Qty , ST_mi , ST_Place , PR_Cdate ,PR_Update FROM waywin_tp.note LEFT JOIN bookERP.pdstock USING(nno) where pdstock.nno=note.nno";
+
+	$sql = "SELECT nno ,PD_No , course ,note , ST_Qty , ST_mi , ST_Place ,pdstock.admin, PR_Cdate ,PR_Update FROM bookERP.pdstock LEFT JOIN waywin_tp.note USING(nno) where pdstock.nno=note.nno UNION ALL SELECT nno ,PD_No , '' , note , ST_Qty , ST_mi , ST_Place , admin , PR_Cdate ,PR_Update FROM soldbook_pdstock";
 			
 	$result = mysqli_query ($my_db, $sql);
 	
